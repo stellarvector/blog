@@ -1,0 +1,15 @@
+---
+layout: writeup
+title: <challenge>
+parent: <ctf>
+grand_parent: <year>
+author: <author_username>
+write_date: <date>
+category: <category>
+tags: <category> <tags>
+last_edit_date:
+---
+
+Write your writeup here...
+
+The markdown you can use is here: https://just-the-docs.github.io/just-the-docs/

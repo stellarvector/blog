@@ -1,0 +1,9 @@
+---
+layout: default
+title: <ctf>
+parent: <year>
+has_children: true
+nav_order: <nav_order>
+---
+
+# <ctf> Writeups

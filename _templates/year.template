@@ -1,0 +1,8 @@
+---
+layout: default
+title: <year>
+has_children: true
+nav_order: <nav_order>
+---
+
+# Writeups from <year>

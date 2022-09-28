@@ -4,12 +4,13 @@ sv-add-writer() {
     read -e -p "[Optional] Your name as you want it displayed on the site: " SCREEN_NAME
     read -e -p "[Optional] A link to one of your profiles: " LINK
 
-    WRITER="""\
-$USERNAME:
-  screen_name: $SCREEN_NAME
-  link: $LINK"""
+    template=$(cat ./_templates/writer.template)
 
-    echo "$WRITER" >> "./_data/writers.yml"
+    new_writer_text=${template//<username>/$USERNAME}
+    new_writer_text=${new_writer_text//<screen_name>/$SCREEN_NAME}
+    new_writer_text=${new_writer_text//<link>/$LINK}
+
+    echo "$new_writer_text" >> "./_data/writers.yml"
 }
 
 sv-add-writeup() {
@@ -60,23 +61,20 @@ sv-add-writeup() {
         __sv_create_ctf $YEAR "$CTF" "$CTF_SLUG" "$BASE_PATH$YEAR"
     fi
 
-    FRONTMATTER="""\
----
-layout: writeup
-title: $CHALLENGE
-parent: $CTF
-grand_parent: $YEAR
-author: $AUTHOR
-write_date: $DATE
-category: $CATEGORY
-tags: $CATEGORY $TAGS
-last_edit_date:
----
+    writeup_template=$(cat ./_templates/writeup.template)
 
-Write your writeup here...
-"""
+    writeup=${writeup_template//<challenge>/$CHALLENGE}
+    writeup=${writeup//<ctf>/$CTF}
+    writeup=${writeup//<year>/$YEAR}
+    writeup=${writeup//<author_username>/$AUTHOR}
+    writeup=${writeup//<date>/$DATE}
+    writeup=${writeup//<category>/$CATEGORY}
+    writeup=${writeup//<tags>/$TAGS}
 
-    __sv_create_challenge "$CHALLENGE_PATH" "$FRONTMATTER"
+    echo "$writeup" > $CHALLENGE_PATH
+
+    echo ""
+    echo "Write your writeup in $CHALLENGE_PATH"
 }
 
 __sluggify() { # https://blog.forret.com/2022/04/15/slugify-bash/
@@ -88,44 +86,27 @@ __sluggify() { # https://blog.forret.com/2022/04/15/slugify-bash/
 
 __sv_create_year() { # YEAR PATH
     nb_years_already_present=$(find $2/ -mindepth 1 -maxdepth 1 -type d | wc -l)
-    NAV_ORDER=$((999 - $nb_years_already_present))
+    nav_order=$((999 - $nb_years_already_present))
 
-    YEAR_INDEX_CONTENT="""\
----
-layout: default
-title: $1
-has_children: true
-nav_order: $NAV_ORDER
----
+    year_template=$(cat ./_templates/year.template)
 
-# Writeups from $1
-"""
+    year_index=${year_template//<year>/$1}
+    year_index=${year_index//<nav_order>/$nav_order}
+
     mkdir "$2/$1/"
-    echo "$YEAR_INDEX_CONTENT" > "$2/$1/index.md"
+    echo "$year_index" > "$2/$1/index.md"
 }
 
 __sv_create_ctf() { # YEAR CTF SLUG PATH
     nb_ctfs_already_present=$(find $4/ -mindepth 1 -maxdepth 1 -type d | wc -l)
-    NAV_ORDER=$((999 - $nb_ctfs_already_present))
+    nav_order=$((999 - $nb_ctfs_already_present))
 
-    CTF_INDEX_CONTENT="""\
----
-layout: default
-title: $2
-parent: $1
-has_children: true
-nav_order: $NAV_ORDER
----
+    ctf_template=$(cat ./_templates/ctf.template)
 
-# $2 Writeups
-"""
+    ctf_index=${ctf_template//<ctf>/$2}
+    ctf_index=${ctf_index//<year>/$1}
+    ctf_index=${ctf_index//<nav_order>/$nav_order}
+
     mkdir "$4/$3/"
-    echo "$CTF_INDEX_CONTENT" > "$4/$3/index.md"
-}
-
-__sv_create_challenge() { # PATH FRONTMATTER
-    echo "$2" > $1
-
-    echo ""
-    echo "Write your writeup in $1"
+    echo "$ctf_index" > "$4/$3/index.md"
 }
