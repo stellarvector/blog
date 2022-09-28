@@ -1,0 +1,25 @@
+---
+layout: default
+title: Tags
+---
+
+<h1>Tags</h1>
+<br>
+
+{% assign tags =  site.writeups | map: 'tags' | join: ','  | split: ',' | uniq | sort %}
+
+{% assign nb_tags = tags | size %}
+{% if nb_tags == 0 %}
+  <p>Tags will appear here once writeups are published.</p>
+{% else %}
+  {% for tag in tags %}
+    <h3 class="label px-4 py-2">{{ tag }}</h3>
+    <ul>
+    {% for writeup in site.writeups %}
+      {% if writeup.tags contains tag %}
+        <li><a href="{{ site.baseurl }}{{ writeup.url }}">{{ writeup.grand_parent }} / {{ writeup.parent }} / {{ writeup.title }}</a></li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  {% endfor %}
+{% endif %}
