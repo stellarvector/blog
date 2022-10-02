@@ -6,6 +6,13 @@ layout: default
 
 <p><small>By {{ page.author }} on {{ page.write_date | date_to_string }}</small></p>
 
+<div style="display: flex;justify-content: flex-start;align-items: baseline;gap: 0.6em;">
+    <a class="label mx-0 px-4 py-2" href="/categories#{{ page.category }}"><b>{{ page.category }}</b></a>
+    {% for tag in page.tags %}
+    <a href="/tags#{{ tag }}" style="text-decoration:underline">{{ tag }}</a>
+    {% endfor %}
+</div>
+
 {{ content }}
 
 <!-- <p>Last edited on {{ page.last_edit_date | date_to_string }}</p> -->
