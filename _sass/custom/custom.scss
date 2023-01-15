@@ -76,6 +76,26 @@ a,
     }
 }
 
+img {
+    border-radius: 4px;
+}
+
+p:has(img) {
+    margin-bottom: 0px;
+
+    &:not(.no-center) {
+        text-align: center;
+    }
+}
+
+figcaption,
+.caption {
+    text-align: center;
+    color: $search-result-preview-color;
+    font-style: italic;
+    margin-top: 0;
+}
+
 
 #front-matter-box {
     display: flex;
