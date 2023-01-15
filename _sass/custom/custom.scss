@@ -1,4 +1,5 @@
 $sv-red: #b21010;
+$sv-red-transparent: #b2101044;
 
 .tag,
 .category {
@@ -81,6 +82,7 @@ a,
     margin-top: 30px;
     align-items: flex-start;
     justify-content: space-between;
+    gap: 15px;
 
     #author-box {
         display: flex;
@@ -104,9 +106,9 @@ a,
                 letter-spacing: 1px;
                 font-weight: 700;
                 font-size: large;
-                color: $body-heading-color;
 
                 #author-link {
+                    color: $body-heading-color;
                     font-size: large;
 
                     .material-symbols-rounded {
@@ -127,12 +129,22 @@ a,
         }
     }
 
+    .actions {
+        min-width: 160px;
+    }
+
     #tagbox {
         display: flex;
         justify-content: flex-start;
         align-items: end;
         gap: 6px;
         flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #front-matter-box {
+        flex-direction: column;
     }
 }
 
@@ -153,6 +165,10 @@ a,
 
 .main-content h1 {
     margin-top: 1em;
+}
+
+#search-button {
+    border-color: $sv-red-transparent;
 }
 
 @import "print.scss";
