@@ -1,0 +1,34 @@
+{% if include.writer == nil %}
+    {% assign writer = site.data.writers[include.username] %}
+{% else %}
+    {% assign writer = include.writer %}
+{% endif %}
+
+<div id="author-box">
+    <div>
+        {% if writer == nil or writer.image == nil or writer.image == "" %}
+            <img class="author-profile-image" src="https://www.gravatar.com/avatar/?s=100&d=mp" alt="Default author picture">
+        {% else %}
+            <img class="author-profile-image" src="{{writer.image | escape}}" alt="{{ page.author | escape}}'s picture">
+        {% endif %}
+        <div>
+            <p class="link-or-name">
+                {% if writer == nil %}
+                    {{ include.username }}
+                {% else %}
+                    {% if writer.link == nil or writer.link == "" %}
+                        {{ writer.screen_name }}
+                    {% else %}
+                        <a id="author-link" href="{{ writer.link | escape}}" target="_blank">{{ writer.screen_name | escape }} <span class="material-symbols-rounded">open_in_new</span></a>
+                    {% endif %}
+                {% endif %}
+            </p>
+            <p class="published-at-info"><span>
+                {{ page.write_date | date: "%d %b" }}</span>
+                {% if page.last_edit_date != nil %}
+                    (last edit <span>{{ page.last_edit_date | date: "%d %b %Y" }})</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>

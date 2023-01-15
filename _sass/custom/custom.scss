@@ -1,0 +1,158 @@
+$sv-red: #b21010;
+
+.tag,
+.category {
+    border-radius: 4px;
+    background: $feedback-color;
+    color: $sv-red;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+
+    .material-symbols-rounded {
+        font-size: 18px;
+    }
+}
+
+.highlight {
+    border-radius: 4px;
+}
+
+.btn-flush {
+    @extend .btn;
+
+    color: $sv-red;
+
+    box-shadow: none;
+    font-size: 12px;
+    text-transform: uppercase;
+
+    .inactive {
+        pointer-events: none;
+    }
+
+    &:hover {
+        color: $sv-red;
+    }
+}
+
+a:focus:hover,
+a:focus-visible:hover,
+a:focus,
+a:focus-visible,
+.btn:focus:hover,
+.btn-flush:focus:hover,
+.square-btn:focus:hover,
+.btn.selected:focus,
+.selected.btn-flush:focus,
+.selected.square-btn:focus,
+.btn:focus,
+.btn-flush:focus,
+.square-btn:focus {
+    border-radius: 4px;
+    box-shadow: 0 0 0px 1.5px black !important;
+}
+
+.square-btn {
+    @extend .btn-flush;
+    height: 50px;
+    line-height: 50px;
+    width: 50px;
+
+    display: inline-flex;
+    align-items: center;
+}
+
+a,
+.nav-list .nav-list-item .nav-list-expander,
+.nav-list.nav-category-list>.nav-list-item>.nav-list>.nav-list-item>.nav-list-link,
+.icon {
+    color: $body-text-color;
+    &:not([class]):hover {
+        text-decoration-color: $body-text-color;
+    }
+}
+
+
+#front-matter-box {
+    display: flex;
+    margin-top: 30px;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    #author-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+
+        > div {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            .author-profile-image {
+                border-radius: 100%;
+                height: 50px;
+                width: 50px;
+            }
+
+            .link-or-name {
+                margin: 0;
+                letter-spacing: 1px;
+                font-weight: 700;
+                font-size: large;
+                color: $body-heading-color;
+
+                #author-link {
+                    font-size: large;
+
+                    .material-symbols-rounded {
+                        font-size: small;
+                    }
+                }
+            }
+
+            .published-at-info {
+                margin: 0;
+                font-size: smaller;
+                color: $search-result-preview-color;
+
+                span {
+                    text-transform: capitalize;
+                }
+            }
+        }
+    }
+
+    #tagbox {
+        display: flex;
+        justify-content: flex-start;
+        align-items: end;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+}
+
+.page-title {
+    margin-top: 0.5em !important;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-size: xxx-large !important;
+}
+
+.page-subtitle {
+    color: $search-result-preview-color;
+    font-size: medium;
+    display: block;
+    margin-top: -20px;
+}
+
+.main-content h1 {
+    margin-top: 1em;
+}
+
+@import "print.scss";

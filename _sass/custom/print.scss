@@ -1,0 +1,42 @@
+@media print {
+    .side-bar,
+    .main-header,
+    .author-profile-image,
+    #front-matter-box .actions,
+    #search-button {
+        display: none !important;
+    }
+
+    .breadcrumb-nav-list {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: center !important;
+
+        &::before {
+            content: "Stellar Vector writeups /" !important;
+        }
+    }
+
+    *:not(.highlight *) {
+        color: black !important;
+    }
+
+    a {
+        text-decoration-color: black !important;
+    }
+
+    hr {
+        height: 2px !important;
+        background-color: black !important;
+    }
+
+    html,
+    body,
+    div {
+        background: white !important;
+    }
+
+    .highlight * {
+        background: #f5f6fa !important;
+    }
+}

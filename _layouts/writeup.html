@@ -1,18 +1,36 @@
 ---
 layout: default
 ---
+<!-- #f5f6fa -->
+<div id="front-matter-box">
+    <div>
+        {% include author.html username=page.author %}
 
-<h1>{{ page.title }}</h1>
-
-<p><small>By {{ page.author }} on {{ page.write_date | date_to_string }}</small></p>
-
-<div style="display: flex;justify-content: flex-start;align-items: baseline;gap: 0.6em;">
-    <a class="label mx-0 px-4 py-2" href="/categories#{{ page.category }}"><b>{{ page.category }}</b></a>
-    {% for tag in page.tags %}
-    <a href="/tags#{{ tag }}" style="text-decoration:underline">{{ tag }}</a>
-    {% endfor %}
+        <div id="tagbox" class="mt-4">
+            <a title="See all {{page.category | escape}} content" class="btn-flush category mx-0 px-2 py-1" href="/categories#{{ page.category | escape}}">
+                <span class="material-symbols-rounded">category</span>
+                <b>{{ page.category | escape }}</b>
+            </a>
+            {% for tag in page.tags %}
+                <a title="See all {{ tag | escape }} content" href="/tags#{{ tag | escape }}" class="btn-flush tag mx-0 px-2 py-1">
+                    <span class="material-symbols-rounded">sell</span>
+                    <b>{{ tag | escape }}</b>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="actions">
+        <button onclick="print()" title="Print writeup" class="square-btn"><span class="material-symbols-rounded">print</span></button>
+        <a href="https://twitter.com/intent/tweet?text=Read%20the%20%40stellar_vector%20writeup%20for%20the%20{{ page.title | escape }}%20challenge%20at%20{{ page.parent | escape }}%20{{ page.grand_parent | escape }}%3A&url={{ site.url }}{{ page.url | escape}}" title="Share on Twitter" class="square-btn" target="_blank"><span class="material-symbols-rounded">share</span></a>
+        <a href="//github.com/stellarvector/writeups/edit/main/{{page.path}}" title="Edit on Github" class="square-btn"><span class="material-symbols-rounded">edit</span></a>
+    </div>
 </div>
 
-{{ content }}
+<h1 id="{{ page.title | slugify }}" class="page-title">
+    <b>{{ page.title }}</b>
+</h1>
+{% if page.subtitle != nil or page.subtitle != "" %}
+    <h4><small class="page-subtitle">{{ page.subtitle }}</small></h4>
+{% endif %}
 
-<!-- <p>Last edited on {{ page.last_edit_date | date_to_string }}</p> -->
+{{ content }}
