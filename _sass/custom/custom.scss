@@ -39,23 +39,6 @@ $sv-red-transparent: #b2101044;
     }
 }
 
-a:focus:hover,
-a:focus-visible:hover,
-a:focus,
-a:focus-visible,
-.btn:focus:hover,
-.btn-flush:focus:hover,
-.square-btn:focus:hover,
-.btn.selected:focus,
-.selected.btn-flush:focus,
-.selected.square-btn:focus,
-.btn:focus,
-.btn-flush:focus,
-.square-btn:focus {
-    border-radius: 4px;
-    box-shadow: 0 0 0px 1.5px black !important;
-}
-
 .square-btn {
     @extend .btn-flush;
     height: 50px;
