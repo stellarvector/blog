@@ -15,7 +15,10 @@ search_exclude: true
   <p>Tags will appear here once writeups are published.</p>
 {% else %}
   {% for tag in tags %}
-    <h3 id="{{ tag }}" class="label px-4 py-2">{{ tag }}</h3>
+    <h3 id="{{ tag }}" class="tag px-4 py-2">
+      <span style="font-size: 18px;" class="material-symbols-rounded">sell</span>
+      {{ tag }}
+    </h3>
     <ul>
     {% for writeup in site.writeups %}
       {% if writeup.tags contains tag %}
