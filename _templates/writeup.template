@@ -1,12 +1,13 @@
 ---
 layout: writeup
-title: <challenge>
 parent: <ctf>
 grand_parent: <year>
 author: <author_username>
-write_date: <date>
 category: <category>
 tags: <category> <tags>
+title: "<challenge>"
+subtitle: "<subtitle>"
+write_date: <date>
 last_edit_date:
 ---
 
