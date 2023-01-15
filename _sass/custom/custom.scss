@@ -63,6 +63,10 @@ img {
     border-radius: 4px;
 }
 
+h1 {
+    font-weight: bold;
+}
+
 p:has(img) {
     margin-bottom: 0px;
 
@@ -164,6 +168,7 @@ figcaption,
     font-size: medium;
     display: block;
     margin-top: -20px;
+    margin-bottom: 20px;
 }
 
 .main-content h1 {

@@ -3,6 +3,10 @@ function setThemeSwitchBtnIcon(icon) {
 }
 
 function activateTheme(theme) {
+    if (theme == jtd.getTheme()) {
+        return;
+    }
+
     jtd.setTheme(theme);
     setThemeSwitchBtnIcon(`${theme}_mode`);
 
