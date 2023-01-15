@@ -15,7 +15,7 @@ collections:
 
 # THEME SETTINGS
 logo: "/assets/images/logo/stellar-vector-main-round-transparant.png"
-color_scheme: light
+color_scheme: dark
 
 search_enabled: true
 
