@@ -11,7 +11,7 @@ permalinks: pretty
 collections:
   writeups:
     output: true
-    permalink: "/:path"
+    permalink: "/:collection/:path"
 
 # THEME SETTINGS
 logo: "/assets/images/logo/stellar-vector-main-round-transparant.png"
@@ -32,17 +32,15 @@ mermaid:
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
   version: "9.1.3"
 
-# aux_links:
-#   "Submit a Writeup":
-#     - "//github.com/stellarvector/writeups"
-# aux_links_new_tab: true
-# nav_external_links:
-#   - title: stellarvector.be
-#     url: //stellarvector.be
-#     hide_icon: false
-#   - title: "@stellar_vector"
-#     url: //twitter.com/stellar_vector
-#     hide_icon: false
+aux_links:
+aux_links_new_tab: true
+nav_external_links:
+  - title: "Github (stellarvector)"
+    url: https://github.com/stellarvector/writeups
+    hide_icon: false
+  - title: "Twitter (@stellar_vector)"
+    url: https://twitter.com/stellar_vector
+    hide_icon: false
 
 heading_anchors: true
 
