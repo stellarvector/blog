@@ -4,7 +4,7 @@ parent: <ctf>
 grand_parent: <year>
 author: <author_username>
 category: <category>
-tags: <category> <tags>
+tags: <tags>
 title: "<challenge>"
 subtitle: "<subtitle>"
 write_date: <date>

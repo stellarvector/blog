@@ -27,6 +27,7 @@ For errors in the script or other parts of the site, submit an issue and possibl
 ## Editing a writeup
 
 When editing a writeup, correct the writeup content (or title) **and add or overwrite the `last_edit_date`**!
+Also add a small changelog message at the end of the writeup explaining what changed on that date.
 
 ## Running locally
 

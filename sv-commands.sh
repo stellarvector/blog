@@ -1,14 +1,22 @@
 
 sv-add-writer() {
-    read -e -p "Your username (no spaces, only [a-zA-Z0-9-_]): " USERNAME
-    read -e -p "[Optional] Your name as you want it displayed on the site: " SCREEN_NAME
-    read -e -p "[Optional] A link to one of your profiles: " LINK
+    read -e -p "Your username (only [a-zA-Z0-9\\-_]): " USERNAME
+    read -e -p "Your name as you want it displayed on the site [username]: " SCREEN_NAME
+    read -e -p "[optional] A link to one of your profiles: " LINK
+    read -e -p "[optional] A link to a profile image: " IMG
+
+    # TODO: Check USERNAME format
 
     template=$(cat ./_templates/writer.template)
 
     new_writer_text=${template//<username>/$USERNAME}
-    new_writer_text=${new_writer_text//<screen_name>/$SCREEN_NAME}
+    if [ -n "$SCREEN_NAME" ]; then
+       new_writer_text=${new_writer_text//<screen_name>/$SCREEN_NAME}
+    else
+       new_writer_text=${new_writer_text//<screen_name>/$USERNAME}
+    fi
     new_writer_text=${new_writer_text//<link>/$LINK}
+    new_writer_text=${new_writer_text//<img>/$IMG}
 
     echo "$new_writer_text" >> "./_data/writers.yml"
 }
@@ -22,10 +30,11 @@ sv-add-writeup() {
     read -e -p "Year of the CTF: " YEAR
     read -e -p "Name of the CTF: " CTF
     read -e -p "Name of the Challenge: " CHALLENGE
+    read -e -p "[optional] Subtitle for the Challenge: " SUBTITLE
     read -e -p "Category of the Challenge (web, crypto, ...): " CATEGORY
-    read -e -p "Other tags you want to add (space-separated): " TAGS
+    read -e -p "[optional] Other tags you want to add (space-separated): " TAGS
 
-    read -e -p "Your username: " AUTHOR
+    read -e -p "Your username (or name if no username): " AUTHOR
     read -e -p "Date of writing this writeup (YYYY-MM-DD): " DATE
 
     CTF_SLUG=$(__sluggify "$CTF")
@@ -70,6 +79,7 @@ sv-add-writeup() {
     writeup=${writeup//<date>/$DATE}
     writeup=${writeup//<category>/$CATEGORY}
     writeup=${writeup//<tags>/$TAGS}
+    writeup=${writeup//<subtitle>/$SUBTITLE}
 
     echo "$writeup" > $CHALLENGE_PATH
 
