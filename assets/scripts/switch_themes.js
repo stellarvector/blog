@@ -2,20 +2,30 @@ function setThemeSwitchBtnIcon(icon) {
     document.getElementById("themeSwitchBtn").firstChild.innerText = icon;
 }
 
-function activateLightMode() {
-    jtd.setTheme("light");
-    setThemeSwitchBtnIcon("light_mode");
-}
+function activateTheme(theme) {
+    jtd.setTheme(theme);
+    setThemeSwitchBtnIcon(`${theme}_mode`);
 
-function activateDarkMode() {
-    jtd.setTheme("dark");
-    setThemeSwitchBtnIcon("dark_mode");
+    if (localStorage) {
+        localStorage.setItem("preferred-theme", theme);
+    }
 }
 
 function switchTheme() {
-    if (jtd.getTheme() === "light") {
-        activateDarkMode();
+    let new_theme = jtd.getTheme() === "light" ? "dark" : "light";
+
+    activateTheme(new_theme);
+}
+
+
+if (localStorage) {
+    let theme = localStorage.getItem("preferred-theme");
+    if (theme) {
+        activateTheme(theme);
     } else {
-        activateLightMode();
+        let darkModePreference = window.matchMedia("(prefers-color-scheme: dark)");
+        if (darkModePreference && darkModePreference.matches) {
+            activateTheme("dark");
+        }
     }
 }
