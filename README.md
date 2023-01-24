@@ -1,4 +1,4 @@
-# Stellar Vector Writeups
+# Stellar Vector Blog
 
 Welcome!
 
