@@ -23,6 +23,7 @@ sv-add-writer() {
 
 sv-add-writeup() {
     BASE_PATH="./_writeups/"
+    mkdir -p $BASE_PATH
 
     echo "Enter the requested info"
     echo ""
@@ -103,8 +104,8 @@ __sv_create_year() { # YEAR PATH
     year_index=${year_template//<year>/$1}
     year_index=${year_index//<nav_order>/$nav_order}
 
-    mkdir "$2/$1/"
-    echo "$year_index" > "$2/$1/index.md"
+    mkdir "$2$1/"
+    echo "$year_index" > "$2$1/index.md"
 }
 
 __sv_create_ctf() { # YEAR CTF SLUG PATH
