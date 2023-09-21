@@ -36,3 +36,5 @@ gem "jekyll-remote-theme"
 gem "rake"
 
 gem "jekyll-include-cache", "~> 0.2.1"
+
+gem "webrick", "~> 1.8"
