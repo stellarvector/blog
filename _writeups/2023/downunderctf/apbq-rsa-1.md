@@ -9,6 +9,7 @@ title: "apbq-rsa-1"
 subtitle: ""
 write_date: 2023-09-07
 last_edit_date:
+layout: mathjax # Uncomment this line to enable MathJax
 ---
 
 ## Challenge description
@@ -50,8 +51,11 @@ We must find a way to use the hints instead.
 
 The first observation is the following.
 Let us call our hints `h1 = a1*p + b1*q` and `h2 = a2*p + b2*q`.
-Then if only we knew `a1` and `a2` we could compute `H = a1*h2 - a2*h1`, to obtain `(a1*b2 - a2*b1)*q`.
-Now this number shares a factor (`q`) with our public modulus `n`; we can efficently compute `gcd(n, H) = q`, and then recover `p = n // q`.
+Then if only we knew `a1` and `a2` we could compute 
+
+$$H = a_1 h_2 - a_2 h_1 = (a_1b_2 - a_2b_1)q$$
+
+Now this number shares a factor `q` with our public modulus `n`; we can efficently compute `gcd(n, H) = q`, and then recover `p = n // q`.
 Of course the same reasoning applies to `b1*h2 - b2*h1` which gives us `p`.
 
 This would allow us to recover the flag.
@@ -101,7 +105,15 @@ assert n % q == 0
 p = n // q
 ```
 
-Once we have `p` and `q` we can compute `phi = (p-1)*(q-1)`, and then `d = pow(e, -1, phi)`, the private exponent we need to invert the ciphertext.
+Once we have `p` and `q` we can compute 
+
+$$\varphi = (p-1)(q-1),$$
+
+and then 
+
+$$d = e^{-1} \bmod \varphi,$$ 
+
+the private exponent we need to invert the ciphertext.
 In this way we finally recover the flag:
 
 ```python
