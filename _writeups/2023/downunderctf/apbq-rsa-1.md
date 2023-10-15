@@ -3,7 +3,7 @@ layout: writeup
 parent: DownUnderCTF
 grand_parent: 2023
 author: r98inver
-category: crypto
+categories: crypto
 tags: rsa
 title: "apbq-rsa-1"
 subtitle: ""

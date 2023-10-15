@@ -3,7 +3,7 @@ layout: writeup
 parent: CTF101
 grand_parent: 2023
 author: victor
-category: osint misc
+categories: osint misc
 tags: 
 title: "sightseeing"
 subtitle: ""

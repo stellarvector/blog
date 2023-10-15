@@ -6,10 +6,12 @@ layout: default
         {% include author.html username=page.author %}
 
         <div id="tagbox" class="mt-4">
-            <a title="See all {{page.category | escape}} content" class="btn-flush category mx-0 px-2 py-1" href="/categories#{{ page.category | escape}}">
-                <span class="material-symbols-rounded">category</span>
-                <b>{{ page.category | escape }}</b>
-            </a>
+            {% for category in page.categories %}
+                <a title="See all {{ category | escape }} content" class="btn-flush category mx-0 px-2 py-1" href="/categories#{{ category | escape }}">
+                    <span class="material-symbols-rounded">category</span>
+                    <b>{{ category | escape }}</b>
+                </a>
+            {% endfor %}
             {% for tag in page.tags %}
                 <a title="See all {{ tag | escape }} content" href="/tags#{{ tag | escape }}" class="btn-flush tag mx-0 px-2 py-1">
                     <span class="material-symbols-rounded">sell</span>
