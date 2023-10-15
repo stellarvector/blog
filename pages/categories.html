@@ -8,7 +8,7 @@ search_exclude: true
 
 <h1>Categories</h1>
 
-{% assign categories =  site.writeups | map: 'category' | join: ','  | split: ',' | uniq | sort %}
+{% assign categories =  site.writeups | map: 'categories' | join: ','  | split: ',' | uniq | sort %}
 
 {% assign nb_categories = categories | size %}
 {% if nb_categories == 0 %}
@@ -20,7 +20,7 @@ search_exclude: true
         <h3 id="{{ category }}" class="category px-4 py-2"><span class="material-symbols-rounded">category</span>{{ category }}</h3>
         <ul>
         {% for writeup in site.writeups %}
-        {% if writeup.category contains category %}
+        {% if writeup.categories contains category %}
             <li><a href="{{ site.baseurl }}{{ writeup.url }}">{{ writeup.grand_parent }} / {{ writeup.parent }} / {{ writeup.title }}</a></li>
         {% endif %}
         {% endfor %}
