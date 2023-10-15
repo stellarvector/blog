@@ -45,10 +45,10 @@ Let's scan it and see where it leads us: [https://www.youtube.com/watch?v=Kq5RV1
 
 ## Video transcription
 The video is hosted by "Vector Stellar" (so we know we're on the right track), and while it is super interesting and has a very nice soundtrack, the flag is nowhere to be seen yet.
-But, like any good YouTuber, we are requested in the description to "check out my other videos". 
+But, like any good YouTuber would, Vector Stellar asks us in the description to "check out my other videos". 
 So let's visit [Vector's channel](https://www.youtube.com/@VectorStellar), where we find a "numbers" video: [https://www.youtube.com/watch?v=HYrUWx-N-Xc](https://www.youtube.com/watch?v=HYrUWx-N-Xc)
 
-This video shows a grid (/chart) of 0-F rows and 0-F columns, with the Stellar Vector moving around, suspiciously always on the intersection of two lines. 
+This video shows a grid (/chart) of 0-F rows and 0-F columns, with the Stellar Vector logo moving around, suspiciously always on the intersection of two lines. 
 Two hex characters, what could that be...
 
 After a lot of fun reading the characters off this grid -- remember, the x-axis is at the bottom, the y-axis to the left, so we read the bottom character first! --, we get this sequence:
@@ -57,7 +57,7 @@ After a lot of fun reading the characters off this grid -- remember, the x-axis 
 
 Those in the know will recognize that these are hex representations of [ASCII codes](https://en.wikipedia.org/wiki/ASCII), which you can decode into letters.
 [CyberChef](https://gchq.github.io/CyberChef/) is always a great tool for dealing with such encodings, and even if you did not know yet about ASCII and hex, you can still use its "magic wand" button (next to "Output") to automatically detect the most likely encoding. 
-One way or another, you should end up with a simple recipe: "From Hex (Delimiter: Space)", which when given the sequence above, produces this string:
+One way or another, you should end up with a simple recipe: "[From Hex (Delimiter: Space)](https://gchq.github.io/CyberChef/#recipe=From_Hex('Space')&input=NzMgNzYgN2IgNjYgMzAgNmUgMzUgNWYgNzMgNjEgNzAgNGYgNTMgNDkgNGUgNTQgNjkgNjEgNjUgN2Q)", which when given the sequence above, produces this string:
 
 `sv{f0n5_sapOSINTiae}`
 
