@@ -1,5 +1,5 @@
 ---
-layout: writeup
+layout: mathjax 
 parent: DownUnderCTF
 grand_parent: 2023
 author: r98inver
@@ -9,7 +9,6 @@ title: "apbq-rsa-1"
 subtitle: ""
 write_date: 2023-09-07
 last_edit_date:
-layout: mathjax # Uncomment this line to enable MathJax
 ---
 
 ## Challenge description
