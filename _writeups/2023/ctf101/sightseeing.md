@@ -33,12 +33,12 @@ Alternatively, you can also look at the recent photos.
 
 > Note: the challenge was originally uploaded the day before the CTF101 event, and the description read that "I went on a city tour yesterday", as a hint to look for reviews from the day before. Nowadays, you will probably have to scroll a bit to find the review posted on 10 October 2023.
 
-![Google Maps review for Fonske](sightseeing-screenshot1.png)
+![Google Maps review for Fonske](/assets/images/2023/ctf101/sightseeing-screenshot1.png)
 
 Apparently, Jonas Snekers (fake Google accounts always come in handy 👀) went on a tour recently, and gave a five-star review to Fonske. 
 He also left an interesting photo...
 
-<img src="sightseeing-photo2.jpg" width="360" alt="Photo of Fonske with a QR code">
+<img src="/assets/images/2023/ctf101/sightseeing-photo2.jpg" width="360" alt="Photo of Fonske with a QR code">
 
 That looks like the same photo as in the challenge description, but now there is... a QR code! 
 Let's scan it and see where it leads us: [https://www.youtube.com/watch?v=Kq5RV14D6qE](https://www.youtube.com/watch?v=Kq5RV14D6qE)
