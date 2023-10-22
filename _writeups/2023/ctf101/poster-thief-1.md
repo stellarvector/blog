@@ -24,9 +24,15 @@ Basically: This is a file that allows you to communicate contact information tha
 
 Solving this challenge is a matter of visiting that file and reading the flag.
 The challenge boils down to understanding that the descriptions point to the `security.txt` file and finding the location of that file.
-When found, upon a simple visit you can see that the flag is simply written in the `security.txt`-file.
+When found (it is located in the `.well-known` directory), upon a simple visit you can see that the flag is simply written in the `security.txt`-file.
 
-`sv{s3cur1ty.txt_ftw!}`
+At path: `/.well-known/security.txt`, you'll find:
+
+```
+Contact: mailto:security@stellarvector.be
+# So secure!!
+# sv{s3cur1ty.txt_ftw!}
+```
 
 For more information regarding the `security.txt` usage, read: [https://almanac.httparchive.org/en/2022/security#securitytxt](https://almanac.httparchive.org/en/2022/security#securitytxt)
 
