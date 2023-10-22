@@ -18,7 +18,7 @@ last_edit_date:
 
 The description of this challenge clearly hints to a HTTP HEAD request.
 A HEAD request is the same as a GET request, but only the headers are returned, not the body.
-Using curl, a head request can easily be sent using `curl $SITE --head`.
+Using curl, a head request can easily be sent using `curl $SITE --head` (or alternatively `curl -I $SITE`).
 
 The response is: 
 
@@ -40,7 +40,7 @@ In this case though, there is a non-standard header `Error` that contains a mess
 When a browser sends a request to a server, it usually sends the `User-Agent` header along.
 In this header, the browser version etc. is communicated to the server, so that server can adapt their response to the value of the header.
 We want to change this header to have the value of `stellar-browser`.
-A header value can be set in curl using the `-H` flag: `curl $SITE --head -H "User-Agent: stellar-browser"`.
+A header value can be set in curl using the `--header` or for short `-H` flag: `curl $SITE --head -H "User-Agent: stellar-browser"`.
 
 The error now reads: `You can only get a flag if you were referred by play.stellarvector.be`.
 This points to the `Referer` (no, it's not the correct spelling, but that's the way it is, these days `Referrer` is often accepted as well) header.
@@ -53,7 +53,7 @@ We can set the `Date` header to indicate what date and time it is at the moment.
 But it's not necessary to structure this header correctly.
 HTTP does require a certain structure for a number of headers (like the Date header), but this is just so servers and browsers (or other clients) know how to interpret the values.
 There is no strict check on how a header is formatted, you can theoretically send whatever you want in a header, your request/response just might not be interpreted correctly.
-So lets just send the year instead of the full structured date: `curl $SITE --head -H "User-Agent: stellar-browser" -H "Referer: play.stellarvector.be" -H "Date: 2024"`.
+So let's just send the year instead of the full structured date: `curl $SITE --head -H "User-Agent: stellar-browser" -H "Referer: play.stellarvector.be" -H "Date: 2024"`.
 
 Now: `You can only get a flag if you request to not be tracked`.
 In modern browsers, you can ask the browser to request to opt out of tracking by the server.
@@ -64,7 +64,7 @@ This hints towards the `Accept-Language` header.
 We can request the page with `fr` as value of that header: `curl $SITE --head -H "User-Agent: stellar-browser" -H "Referer: play.stellarvector.be" -H "Date: 2024" -H "DNT: 1" -H "Accept-Language: fr"`
 
 Upon making that request, the flag is printed in the `sv-flag` header.
-Or, in a one-liner:
+Or, in a one-liner (with `-s/--silent` so curl does not output status progress):
 
 ```bash
 curl -s $SITE -H "User-Agent: stellar-browser" -H "Referer: play.stellarvector.be" -H "Date: 2024" -H "DNT: 1" -H "Accept-Language: fr" --head | grep -o sv{.*}
