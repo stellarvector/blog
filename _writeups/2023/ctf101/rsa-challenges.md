@@ -116,7 +116,7 @@ or equivalently
 
 $$ de \equiv 1 \bmod \varphi.$$
 
-But this tells us that `ed - 1` is a multiple of $$\varphi$$, and a bit of googling tells us that there exists a clever way to factor a number knowing its totient. See for instance [this post](https://math.stackexchange.com/questions/12328/rsa-fast-factorization-of-n-if-d-and-e-are-known). This relies on the fact that $$\varphi(n)$$ is also the order of the multiplicative group of the numbers $$\mod n$$. However, even without getting to much into the math explained there, we can implement their algorithm to find a factor for `n`:
+But this tells us that `ed - 1` is a multiple of $$\varphi$$, and a bit of googling tells us that there exists a clever way to factor a number knowing a multiple of its totient. See for instance [this post](https://math.stackexchange.com/questions/12328/rsa-fast-factorization-of-n-if-d-and-e-are-known). This relies on the fact that $$\varphi(n)$$ is also the order of the multiplicative group of the numbers $$\mod n$$. However, even without getting to much into the math explained there, we can implement their algorithm to find a factor for `n`:
 
 ```python
 def find_factor(ed, n):
@@ -147,4 +147,10 @@ def find_factor(ed, n):
 
 This gives us almost instantly a factor for `n`, from which we can get the flag: `sv{l34ks_m4k3s_3v3ryth1ng_34sy3r}`.
 
+{: .new-title }
+> Source Code
+>
+> The source code of the solution is available [here](https://gist.github.com/r98inver/c041c72140b5512c35ae348d53a4e4d4)
+
 p.s. this challenge was inspired by a (harder) challenge that recently appeared in TeamItalyCTF. If you enjoyed it, go check out the [original one](https://training.olicyber.it/challenges#challenge-467)!
+
