@@ -26,7 +26,7 @@ Solving this challenge is a matter of visiting that file and reading the flag.
 The challenge boils down to understanding that the descriptions point to the `security.txt` file and finding the location of that file.
 When found (it is located in the `.well-known` directory), upon a simple visit you can see that the flag is simply written in the `security.txt`-file.
 
-At path `/.well-known/security.txt`, you'll find:
+At the path `/.well-known/security.txt`, you'll find:
 
 ```
 Contact: mailto:security@stellarvector.be
