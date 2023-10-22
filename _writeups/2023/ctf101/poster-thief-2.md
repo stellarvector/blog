@@ -25,7 +25,7 @@ The fact that a file is included is not a vulnerability on itself.
 This can be a valid approach in building a website in certain cases.
 But if the developer is not careful, we may be able to make the backend include *any* file on the server's filesystem.
 
-In linux (which is the OS this challenge is running on, as are most websites) the filesystem can be traversed by using the `./` (current directory) and `../` (parent directory) paths.
+In Linux (which is the OS this challenge is running on, as are most websites), the filesystem can be traversed by using the `./` (current directory) and `../` (parent directory) paths.
 So let's try to include a random file (no guarantee that it exists) at the parent directory: `?page=../test.html`.
 The output is the following:
 
@@ -60,11 +60,11 @@ This points to some sort of filtering that is being performed.
 Great, because the developer knew about the possibility of a LFI and implemented a defense.
 Now, completely defending against most vulnerabilities is quite difficult, and sometimes very simple defenses are used that have been shown to be easily circumventable.
 
-So lets think about what is happening in the backend?
+So let's think about what is happening in the backend?
 The defense applied is very simple, trivial even (of course you don't know this and will have to test and try different circumventions to get an idea of the defense(s) used).
 It is referred to by HackTricks as *traversal sequences stripped non-recursively*.
 This means that the developer was aware of the potential vulnerability (good) and tried to defend against the vulnerability by removing the `../` sequence (and potentially other 'traversal sequences'; good).
-But they don't remove these sequences recursively, a.k.a. they remove them only once.
+But they don't remove these sequences recursively, instead they remove them only once.
 This gives us the opportunity to construct a payload that, after stripping the occurrences of `../`, still ends up with `../` sequences in it.
 An example of this is `....//`: remove the `../` and you end up with `../`.
 
