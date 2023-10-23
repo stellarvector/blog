@@ -1,5 +1,4 @@
 ---
-layout: writeup
 parent: CTF101
 grand_parent: 2023
 author: r98inver
@@ -12,11 +11,11 @@ last_edit_date:
 layout: mathjax # Uncomment this line to enable MathJax
 ---
 
-The first two crypto challenges of **CTF1010** where about *encoding*. 
+The first two crypto challenges of **CTF101** were about *encoding*. 
 
 ## sv-encoder
 
-We are given a python script encoding the flag: 
+We are given a Python script encoding the flag: 
 
 ```python
 import base64 as b64
@@ -32,7 +31,7 @@ with open('out.txt', 'w') as fh:
 	fh.write(flag)
 ```
 
-As we can see, the flag is encoding with `base16`, then `base64` 20 times, then again 5 times `base16`. We are also give the output in `out.txt`. The solution consists in reversing the process, step by step:
+As we can see, the flag is encoding with `base16`, then `base64` 20 times, then again 5 times `base16`. We are also given the output in `out.txt`. The solution consists of reversing the process, step by step:
 
 ```python
 import base64 as b64
@@ -84,13 +83,13 @@ flag = magic_shuffle(flag)
 flag = b64.b16encode(flag)
 ```
 
-Let's look closer to `magic_shuffle`: for each character `c` in our string we do three things:
+Let's look closer at `magic_shuffle`: for each character `c` in our string we do three things:
 
-- first we derive values `b0` to to `b3` by using a `mask = 0b11` and a binary shift: this means that `b0` are the last two significant bits of `c`, `b1` the next two and so on; for instance, `a` in binary is `0b1100001`, and hence we would get `b0 = 0b01`, `b1 = 0b00`, `b2=0b10` and `b3 = 0b01`;
+- first we derive values `b0` to `b3` by using a `mask = 0b11` and a binary shift: this means that `b0` are the last two significant bits of `c`, `b1` the next two and so on; for instance, `a` in binary is `0b1100001`, and hence we would get `b0 = 0b01`, `b1 = 0b00`, `b2=0b10` and `b3 = 0b01`;
 - then we add `32` to each one of the `bi`;
 - finally, they are shuffled, and a bytestring made by `[b1, b3, b0, b2]` is returned; for instance, if we try to encode `b'a'` we get `b' !!"'`.
 
-The key observation here is that for each single byte we encode we get four bytes, and that these four bytes entirely define the starting byte. All we have to do is once again go backwards: for each tuple of four bytes we take them, we unshuffle them, we subtract 32 to each one of them and then use them one next to each other to rebuild the original byte.
+The key observation here is that for each single byte we encode, we get four bytes, and that these four bytes entirely define the starting byte. All we have to do is once again go backwards: for each tuple of four bytes we take them, we unshuffle them, we subtract 32 from each one of them and then put them one next to each other to rebuild the original byte.
 
 ```python
 def magic_unshuffle(shuffled_string):
