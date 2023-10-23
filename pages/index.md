@@ -7,7 +7,7 @@ nav_order: 1
 
 # Stellar Vector Blog
 
-Welcome, on this site you'll find writeups and articles of *[Stellar Vector](//stellarvector.be)*, the CTF-team of the imec-DistriNet research group at the KU Leuven, located in Belgium.
+Welcome, on this site you'll find writeups and articles of *[Stellar Vector](//stellarvector.be)*, the CTF-team of the DistriNet research group at the KU Leuven, located in Belgium.
 
 We rely on contributions of our members! If you have written a writeup or otherwise interesting article, please submit a PR on Github (and who knows, you might be rewarded for your work :) ).
 
