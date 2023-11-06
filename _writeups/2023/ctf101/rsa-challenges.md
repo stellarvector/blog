@@ -8,7 +8,7 @@ tags: rsa
 title: "RSA Challenges"
 subtitle: ""
 write_date: 2023-10-20
-last_edit_date:
+last_edit_date: 2023-11-06
 layout: mathjax # Uncomment this line to enable MathJax
 ---
 
@@ -16,7 +16,7 @@ The third and last crypto session of **CTF101** was about RSA. We had three chal
 
 ## Read-inStructions-cArefully
 
-The first challenge, as suggested by the name, was only about understanding how RSA encryption and decryption works. We are given all the information we need, especially $p$ and $q$:
+The first challenge, as suggested by the name, was only about understanding how RSA encryption and decryption works. We are given all the information we need, especially $$p$$ and $$q$$:
 
 ```python
 p = 277624116242636689 
@@ -56,7 +56,7 @@ print(f'{m = }')
 ## SPQR
 
 The second challenge was the same, except that this time we are given `n = 101264313152893175913493633998971546542632990679253512564207556023
-` instead of $$p$$ and $$q$$. To recover them we have to factorize. The number is too big to use too simple methods like trial division, but can be easily handled by software like `sagemath`, `MAGMA` or the online [Alpertron Factorization Tool](https://www.alpertron.com.ar/ECM.HTM). Once we recover $$p$$ and $$q$$, we can apply the same decryption procedure as above and get the flag: `sv{f4ct0r1ng_1s_funn13r}`.
+` instead of $$p$$ and $$q$$. To recover them we have to factorize. The number is too big for too simple methods like trial division, but can be easily handled by software like `sagemath`, `MAGMA` or the online [Alpertron Factorization Tool](https://www.alpertron.com.ar/ECM.HTM). Once we recover $$p$$ and $$q$$, we can apply the same decryption procedure as above and get the flag: `sv{f4ct0r1ng_1s_funn13r}`.
 
 ## leak
 
@@ -116,7 +116,7 @@ or equivalently
 
 $$ de \equiv 1 \bmod \varphi.$$
 
-But this tells us that `ed - 1` is a multiple of $$\varphi$$, and a bit of googling tells us that there exists a clever way to factor a number knowing a multiple of its totient. See for instance [this post](https://math.stackexchange.com/questions/12328/rsa-fast-factorization-of-n-if-d-and-e-are-known). This relies on the fact that $$\varphi(n)$$ is also the order of the multiplicative group of the numbers $$\mod n$$. However, even without getting to much into the math explained there, we can implement their algorithm to find a factor for `n`:
+But this tells us that `ed - 1` is a multiple of $$\varphi$$, and a bit of googling tells us that there exists a clever way to factor a number knowing a multiple of its totient. See for instance [this post](https://math.stackexchange.com/questions/12328/rsa-fast-factorization-of-n-if-d-and-e-are-known). This relies on the fact that $$\varphi(n)$$ is also the order of the multiplicative group of the numbers $$\bmod n$$. However, even without getting to much into the math explained there, we can implement their algorithm to find a factor for `n`:
 
 ```python
 def find_factor(ed, n):
