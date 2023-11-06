@@ -1,5 +1,4 @@
 ---
-layout: writeup
 parent: CTF101
 grand_parent: 2023
 author: r98inver
@@ -86,7 +85,7 @@ for i in range(2):
 	print(f'leak_{i+1} = {leak_i}')
 ```
 
-We are given two leaks: the value `leak = d*e - 1` is multiplied by two random primes of `512` bits each, then a little error `k` (a random number between `21` and `42`) is added to each one, and then they are returned to us. The firts step here is to recover the value of `leak`. Then we have to figure out how to factor exploiting this extra information (the challenge had a hint suggesting that this is possible).
+We are given two leaks: the value `leak = d*e - 1` is multiplied by two random primes of `512` bits each, then a little error `k` (a random number between `21` and `42`) is added to each one, and then they are returned to us. The first step here is to recover the value of `leak`. Then we have to figure out how to factor the number, exploiting this extra information (the challenge had a hint suggesting that this is possible).
 
 So let's recover the `leak`. The first observation here is that if we knew `k1` and `k2` (the two values of `k` respectively), then we could recover `leak` by taking the `GCD(leak_1, leak2)`. This is true since each of them is multiplied by a big prime, which is a factor they are not likely to share. The same observation allows us to bruteforce `k1` and `k2`: we have in total ~400 possible pairs `(k1, k2)` to check, and for each of those we can just check if we get a reasonable `GCD`. If `k1` or `k2` are wrong, the resulting `leak_i - ki` will not share the common factor `leak`, and hence the `GCD` we get would probably be small.
 
@@ -108,7 +107,7 @@ for i in range(2):
 	print(f'leak_{i+1} = {leak_i}')
 ```
 
-Running this we get `k1 = 25` and `k2 = 27`, but most importantly the value of `leak`. Now the second part: how do we factor knowing `leak = d*e - 1`? As we can se from the challenge script (or from a generic knowledge of how RSA works), we know that it holds
+Running this we get `k1 = 25` and `k2 = 27`, but most importantly the value of `leak`. Now the second part: how do we factor knowing `leak = d*e - 1`? As we can see from the challenge script (or from a generic knowledge of how RSA works), we know that the following holds:
 
 $$ d \equiv e^{-1} \bmod \varphi$$
 

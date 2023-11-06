@@ -1,5 +1,4 @@
 ---
-layout: writeup
 parent: CTF101
 grand_parent: 2023
 author: r98inver
@@ -12,7 +11,7 @@ last_edit_date: 2023-11-06
 layout: mathjax # Uncomment this line to enable MathJax
 ---
 
-The second crypto session of **CTF101** focused on symmetric enctryption, and more specifically substitution ciphers.
+The second crypto session of **CTF101** focused on symmetric encryption, and more specifically substitution ciphers.
 
 ## stellar-caesar
 
@@ -20,7 +19,7 @@ The first challenge was a simple Caesar Cipher, as hinted by the name. The ciphe
 
 ## trial-and-error
 
-The second challenge was the python version of the Caesar Cipher: a single byte XOR. The idea here is to simply bruteforce all the possible keys, since there are only 256 possibilities to chose one byte, and then find a way to detect when the output is correct (checking by hand 256 possibilities is still duable, but automating it is much more helpful for the next challenge and way less boring). First of all, we need a function to xor a key against our plaintext. We can use the `xor` function from `pwntools` or write a simple helper function like this:
+The second challenge was the python version of the Caesar Cipher: a single byte XOR. The idea here is to simply bruteforce all the possible keys, since there are only 256 possibilities to chose one byte, and then find a way to detect when the output is correct (checking by hand 256 possibilities is still doable, but automating it is much more helpful for the next challenge and way less boring). First of all, we need a function to xor a key against our plaintext. We can use the `xor` function from `pwntools` or write a simple helper function like this:
 
 ```python
 def single_key_xor(data, k):
@@ -41,7 +40,7 @@ for k in range(256):
 		print(f'{k = }')
 ```
 
-In the decrypted text, with `k=105`, we can find the flag: `sv{t1m3s_4r3_ch4ng1ng}`. Other strategies include checking that the most frequent characters in the output are either `e` or a whitespace, the two most common characters in written english, or checking that the whole output consists in ASCII characters. This is an example of the former, while we will see the latter in the next challenge:
+In the decrypted text, with `k=105`, we can find the flag: `sv{t1m3s_4r3_ch4ng1ng}`. Other strategies include checking that the most frequent characters in the output are either `e` or a whitespace, the two most common characters in written English, or checking that the whole output consists in ASCII characters. This is an example of the former, while we will see the latter in the next challenge:
 
 ```python
 for k in range(256):
@@ -61,7 +60,7 @@ for k in range(256):
 
 Once again the name tells us a lot about the challenge: we face a *Vigenere Cipher* in its python version, i.e. a multi-key xor. Unlike the previous exercise, we cannot bruteforce the keys: the number of possible keys of length $$s$$ is $$256^s$$, so we cannot hope to go much further than maybe 3 characters. We need to come up with a smarter method. There are three main things to observe:
 
-- if we knew the key length, we do not have to bruteforce all the possible keys, but we could build the key character by character. Let say the length is three: then the first byte of the plaintext is xored with the first byte of the key, the second with the second, the third with the third, but then the fourth with the first and so on. So if we split the ciphertext in three groups, each one that got xored against a different byte of the key, we have three parallel instances of single key xor that we can target. This drasically reduce the bruteforce cost from $$256^3$$ to $$3 \times 256$$, which is very feasible;
+- if we knew the key length, we did not have to bruteforce all the possible keys, but we could build the key character by character. Let say the length is three: then the first byte of the plaintext is xored with the first byte of the key, the second with the second, the third with the third, but then the fourth with the first and so on. So if we split the ciphertext in three groups, each one that got xored against a different byte of the key, we have three parallel instances of single key xor that we can target. This drasically reduce the bruteforce cost from $$256^3$$ to $$3 \times 256$$, which is very feasible;
 - what we lose with this approach is the adjacence of the characters: we cannot hope to find the flag in any of the groups, since if `s` goes in the first group, `v` goes in the second and `{` in the third one; however, the frequency of the characters will stay more or less unchanged, and hence we can still look for `e` and whitespace as the most frequent characters or rule out keys that produce non ASCII characters;
 - finally, notice that we made one big assumption: all that works if we know the key length, which we do not. There exist some smart techniques to guess the key length from the text (e.g. coincidence indexes) but they are usually not actually needed, especially if the key is not too long and the first two steps are implemented properly. What we can do instead is to bruteforce the key length and see how many good keys we get for each possible length; we will see that in this case for the wrong key length we authomatically filter all the possible keys.
 

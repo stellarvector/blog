@@ -3,7 +3,7 @@ title: Stellar Vector Blog
 email: blog@stellarvector.be
 description: >- # this means to ignore newlines until "baseurl:"
   Welcome on the Stellar Vector blog.
-  Stellar Vector is the CTF-team of the imec-DistriNet research group at the KU Leuven,
+  Stellar Vector is the CTF-team of the DistriNet research group at the KU Leuven,
   located in Belgium.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "//blog.stellarvector.be"
