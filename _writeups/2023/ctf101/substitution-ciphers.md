@@ -7,7 +7,7 @@ tags: single-key-xor vigenere
 title: "Substitution Ciphers"
 subtitle: ""
 write_date: 2023-10-20
-last_edit_date:
+last_edit_date: 2023-11-06
 layout: mathjax # Uncomment this line to enable MathJax
 ---
 
@@ -40,7 +40,7 @@ for k in range(256):
 		print(f'{k = }')
 ```
 
-In the decrypted text, with `k=105`, we can find the flag: `sv{t1m3s_4r3_ch4ng1ng}`. Other strategies include checking that the most frequent characters in the output are either `e` or ` `, the two most common characters in written English, or checking that the whole output consists in ASCII characters. This is an example of the former, while we will see the latter in the next challenge:
+In the decrypted text, with `k=105`, we can find the flag: `sv{t1m3s_4r3_ch4ng1ng}`. Other strategies include checking that the most frequent characters in the output are either `e` or a whitespace, the two most common characters in written English, or checking that the whole output consists in ASCII characters. This is an example of the former, while we will see the latter in the next challenge:
 
 ```python
 for k in range(256):
@@ -58,11 +58,11 @@ for k in range(256):
 
 ## pygenere
 
-Once again the name explains us a lot of the challenge: we face a *Vigenere Cipher* in its python version, i.e. a multi-key xor. Unlike the previous exercise, we cannot bruteforce the keys: the number of possible keys of length $$s$$ is $$256^s$$, so we cannot hope to go much further than maybe 3 characters. We need to come up with a smarter method. There are three main things to observe:
+Once again the name tells us a lot about the challenge: we face a *Vigenere Cipher* in its python version, i.e. a multi-key xor. Unlike the previous exercise, we cannot bruteforce the keys: the number of possible keys of length $$s$$ is $$256^s$$, so we cannot hope to go much further than maybe 3 characters. We need to come up with a smarter method. There are three main things to observe:
 
-- if we know the key length, we do not have to bruteforce all the possible keys, but we can build the key character by character; let say the length is three: then the first byte of the plaintext is xored with the first byte of the key, the second with the second, the third with the third, but then the fourth with the first and so on. So if we split the ciphertext in three groups, each one that got xored against a different byte of the key, we have three parallel instances of single key xor that we can target. This drastically reduces the bruteforce cost from $$256^3$$ to $$3 \times 256$$, which is very feasible;
-- what we lose with this approach is the adjacence of the characters: we cannot hope to find the flag in any of the groups, since if `s` goes in the first group, `v` goes in the second and `{` in the third one; however, the frequency of the characters will stay more or less unchanged, and hence we can still look for `e` and ` ` as the most frequent characters or rule out keys that produce non ASCII characters;
-- finally, notice that we made one big assumption: all that works if we know the key length, which we do not. There exist some smart techniques to guess the key length from the text (e.g. coincidence indexes) but they are usually not actually needed, especially if the key is not too long and the first two steps are implemented properly. What we can do instead is to bruteforce the key length and see how many good keys we get for each possible length; we will see that for the wrong key length we authomatically filter all the possible keys.
+- if we knew the key length, we did not have to bruteforce all the possible keys, but we could build the key character by character. Let say the length is three: then the first byte of the plaintext is xored with the first byte of the key, the second with the second, the third with the third, but then the fourth with the first and so on. So if we split the ciphertext in three groups, each one that got xored against a different byte of the key, we have three parallel instances of single key xor that we can target. This drastically reduces the bruteforce cost from $$256^3$$ to $$3 \times 256$$, which is very feasible;
+- what we lose with this approach is the adjacence of the characters: we cannot hope to find the flag in any of the groups, since if `s` goes in the first group, `v` goes in the second and `{` in the third one; however, the frequency of the characters will stay more or less unchanged, and hence we can still look for `e` and whitespace as the most frequent characters or rule out keys that produce non ASCII characters;
+- finally, notice that we made one big assumption: all that works if we know the key length, which we do not. There exist some smart techniques to guess the key length from the text (e.g. coincidence indexes) but they are usually not actually needed, especially if the key is not too long and the first two steps are implemented properly. What we can do instead is to bruteforce the key length and see how many good keys we get for each possible length; we will see that in this case for the wrong key length we authomatically filter all the possible keys.
 
 Now let's implement it. First we need a function that tells us which single byte keys are good for a group of characters. The simplest option is to filter out all the keys that result in non ASCII plaintext, and return all the others.
 
