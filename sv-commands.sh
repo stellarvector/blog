@@ -1,22 +1,22 @@
 
 sv-add-writer() {
-    read -e -p "Your username (only [a-zA-Z0-9\\-_]): " USERNAME
-    read -e -p "Your name as you want it displayed on the site [username]: " SCREEN_NAME
-    read -e -p "[optional] A link to one of your profiles: " LINK
-    read -e -p "[optional] A link to a profile image: " IMG
+    _USERNAME=$(__ask_question "Your username (only [a-zA-Z0-9\\-_]): ")
+    _SCREEN_NAME=$(__ask_question "Your name as you want it displayed on the site [username]: ")
+    _LINK=$(__ask_question "[optional] A link to one of your profiles: ")
+    _IMG=$(__ask_question "[optional] A link to a profile image: ")
 
-    # TODO: Check USERNAME format
+    # TODO: Check _USERNAME format
 
     template=$(cat ./_templates/writer.template)
 
-    new_writer_text=${template//<username>/$USERNAME}
-    if [ -n "$SCREEN_NAME" ]; then
-       new_writer_text=${new_writer_text//<screen_name>/$SCREEN_NAME}
+    new_writer_text=${template//<username>/$_USERNAME}
+    if [ -n "$_SCREEN_NAME" ]; then
+       new_writer_text=${new_writer_text//<screen_name>/$_SCREEN_NAME}
     else
-       new_writer_text=${new_writer_text//<screen_name>/$USERNAME}
+       new_writer_text=${new_writer_text//<screen_name>/$_USERNAME}
     fi
-    new_writer_text=${new_writer_text//<link>/$LINK}
-    new_writer_text=${new_writer_text//<img>/$IMG}
+    new_writer_text=${new_writer_text//<link>/$_LINK}
+    new_writer_text=${new_writer_text//<img>/$_IMG}
 
     echo "$new_writer_text" >> "./_data/writers.yml"
 }
@@ -28,15 +28,14 @@ sv-add-writeup() {
     echo "Enter the requested info"
     echo ""
 
-    read -e -p "Year of the CTF: " YEAR
-    read -e -p "Name of the CTF: " CTF
-    read -e -p "Name of the Challenge: " CHALLENGE
-    read -e -p "[optional] Subtitle for the Challenge: " SUBTITLE
-    read -e -p "Category of the Challenge (web, crypto, ...): " CATEGORY
-    read -e -p "[optional] Other tags you want to add (space-separated): " TAGS
-
-    read -e -p "Your username (or name if no username): " AUTHOR
-    read -e -p "Date of writing this writeup (YYYY-MM-DD): " DATE
+    YEAR=$(__ask_question "Year of the CTF: ")
+    CTF=$(__ask_question "Name of the CTF: ")
+    CHALLENGE=$(__ask_question "Name of the Challenge: ")
+    SUBTITLE=$(__ask_question "[optional] Subtitle for the Challenge: ")
+    CATEGORY=$(__ask_question "Category of the Challenge (web, crypto, ...): ")
+    TAGS=$(__ask_question "[optional] Other tags you want to add (space-separated): ")
+    AUTHOR=$(__ask_question "Your username (or name if no username): ")
+    DATE=$(__ask_question "Date of writing this writeup (YYYY-MM-DD): ")
 
     CTF_SLUG=$(__sluggify "$CTF")
     CHALLENGE_SLUG=$(__sluggify "$CHALLENGE")
@@ -44,10 +43,10 @@ sv-add-writeup() {
     ORIGINAL_CHALLENGE=$CHALLENGE
     I=2
 
-    if [[ -f $CHALLENGE_PATH ]]; then
+    if [[ -f "$CHALLENGE_PATH" ]]; then
         echo ""
-        read -e -p "There already exists a writeup for this challenge! Continue? (y/n) " STILL_CONTINUE
-        if [ "y" != "$STILL_CONTINUE" ]; then
+        STILL_CONTINUE=$(__ask_question "There already exists a writeup for this challenge! Continue? (y/n) ")
+        if ! [[ "$STILL_CONTINUE" =~ ^[Yy]$ ]]; then
             echo "Aborted!"
             return
         fi
@@ -86,6 +85,16 @@ sv-add-writeup() {
 
     echo ""
     echo "Write your writeup in $CHALLENGE_PATH"
+}
+
+__ask_question() {
+    if [ ! -z "$BASH_VERSION" ]; then
+        read -e -p "$1" _RESULT
+        echo "$_RESULT"
+    elif [ ! -z "$ZSH_VERSION" ]; then
+        read "result?$1"
+        echo "$result"
+    fi
 }
 
 __sluggify() { # https://blog.forret.com/2022/04/15/slugify-bash/
