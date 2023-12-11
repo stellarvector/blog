@@ -16,7 +16,7 @@ last_edit_date:
 
 The PhantomFeed challenge consists of three different components: the marketplace frontend (served at localhost:5000), the marketplace backend (localhost:4000) and a feed of messages (localhost:3000). All of these services are also served by a reverse nginx proxy (localhost:1337) made available on different paths (`/`, `/backend` and `/phantomfeed` respectively).
 
-Similarly, the challenge also consists of three main parts, although we only that with the power of hindsight.
+Similarly, the challenge also consists of three main parts, although we only know that with the power of hindsight.
 
 ## Registering a user
 
@@ -47,7 +47,7 @@ def send_email(self, message):
 
 Circling back a bit, we can see that when a new user is created, it is actually verified as the default value of the `verified` column of users is set to `True`:
 
-```
+```python
 class Users(Base):
   __tablename__ = "users"
   id = Column(Integer, primary_key=True)
@@ -67,7 +67,6 @@ class EmailClient:
 
 ...
 
-
   def parse_email(self, email):
     pattern = r"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@(([0-9a-zA-Z])+([-\w]*[0-9a-zA-Z])*\.)+[a-zA-Z]{2,9})$"
     try:
@@ -78,7 +77,7 @@ class EmailClient:
 
 When [checking](https://devina.io/redos-checker) whether that regular expression is vulnerable to ReDoS, we can see that it is. This allows us to arbitrarily increase the time that the created user is verified. All we have to do is enter an email that takes a long time to parse. Something like `'A@0' + ('AA.0' * n) + 'AA'` does the job well (the higher `n`, the longer the regex takes to match).
 
-Exploiting the ReOoS and race condition looks as follows:
+Exploiting the ReDoS and race condition looks as follows:
 
 ```python
 import random
@@ -139,6 +138,7 @@ So to exploit this we can do the following steps:
 
 The complete exploit for this second phase looks as follows:
 
+{% raw %}
 ```python
 import requests
 from base64 import b64encode
@@ -168,16 +168,19 @@ print('link to post to feed: ', "@127.0.0.1:1337/phantomfeed/oauth2/token?client
 print('JS to host in exploit.js\n=============================================')
 print(js)
 ```
+{% endraw %}
 
 ## RCE to get the flag
 
 One functionality that only administrators can do, is generate PDFs of the orders. The PDF is generated based on an HTML, for which the `color` parameter can be controlled, and is used in the template as follows:
 
+{% raw %}
 ```html
 <font color="{{ color }}">
   Orders:
 </font>
 ```
+{% endraw %}
 
 Looking for known exploits for the HTML2PDF library that was used, we quickly find CVE-2023-33733, that is an exploit for when the `color` attribute of a `font` is abused (surprise, surprise). Simply copy-pasting and adjusting the executed code of [the PoC for the CVE](https://github.com/c53elyas/CVE-2023-33733) did the trick.
 
