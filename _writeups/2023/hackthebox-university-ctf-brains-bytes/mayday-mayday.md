@@ -57,7 +57,7 @@ $$
 d_p = d_p^M 2^i + d_p^L
 $$
 
-and the same for $$d_q$$. We knwo $$d_p^M$$ from the leak, and in our case $$i = 512$$. Section 3.1 gives us a way to compute $$k$$ and $$l$$, where $$ed_p = k(p - 1) + 1$$. First, we need to compute $$A$$:
+and the same for $$d_q$$. We know $$d_p^M$$ from the leak, and in our case $$i = 512$$. Section 3.1 gives us a way to compute $$k$$ and $$l$$, where $$ed_p = k(p - 1) + 1$$. First, we need to compute $$A$$:
 
 ```python
 i = 512
@@ -72,7 +72,7 @@ $$
 \delta = \frac{1}{4} < \frac{1}{2} - \frac{2}{9} \sim 0.27
 $$
 
-so we are just inside the boud. Then we can recover $$k$$ and $$l$$ as roots of the appropriate polynomial:
+so we are just inside the bounds. Then we can recover $$k$$ and $$l$$ as roots of the appropriate polynomial:
 
 ```python
 x = PolynomialRing(RationalField(), 'x').gen()
