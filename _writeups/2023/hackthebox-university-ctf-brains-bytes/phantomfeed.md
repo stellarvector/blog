@@ -1,6 +1,6 @@
 ---
 layout: writeup
-parent: HTB UNI Brains & Bytes
+parent: "HackTheBox University CTF: Brains & Bytes"
 grand_parent: 2023
 author: tomvg
 category: web
@@ -12,7 +12,7 @@ last_edit_date:
 # layout: mathjax # Uncomment this line to enable MathJax
 ---
 
-*Note: Backup of challenge source code available at [web_phantomfeed.zip](/assets/challenge-sources/2023/htb-uni-brains-bytes/web_phantomfeed.zip).*
+*Note: Backup of challenge source code available at [web_phantomfeed.zip](/assets/challenge-sources/2023/hackthebox-university-ctf-brains-bytes/web_phantomfeed.zip).*
 
 The PhantomFeed challenge consists of three different components: the marketplace frontend (served at localhost:5000), the marketplace backend (localhost:4000) and a feed of messages (localhost:3000). All of these services are also served by a reverse nginx proxy (localhost:1337) made available on different paths (`/`, `/backend` and `/phantomfeed` respectively).
 
