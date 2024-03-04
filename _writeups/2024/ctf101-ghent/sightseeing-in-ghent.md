@@ -31,6 +31,7 @@ Let's look for [Jacob's pin on Google Maps](https://maps.app.goo.gl/fwfxm5mCb7DU
 Alternatively, you can also look at the recent photos. 
 
 > Note: the challenge was originally uploaded the day before the CTF101 Ghent lecture, and the description read that "I was walking around the city yesterday", as a hint to look for reviews from the day before. Nowadays, you will probably have to scroll a bit to find the review posted on 29 February 2024.
+
 ![Google Maps review for Jacob van Artevelde](/assets/images/2024/ctf101-ghent/sightseeing-in-ghent-screenshot1.png)
 
 Apparently, Jonas Snekers (fake Google accounts always come in handy 👀) went for a walk recently, and gave a five-star review to Jacob (or at least his statue). 
