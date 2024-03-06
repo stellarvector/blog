@@ -1,7 +1,7 @@
 ---
 layout: writeup
-parent: "CTF101 Ghent"
-grand_parent: 2024
+parent: CTF101
+grand_parent: 2023
 author: victor
 categories: osint misc
 tags: 
@@ -43,6 +43,7 @@ That looks like the same photo as in the challenge description, but now there is
 Let's scan it and see where it leads us: [https://www.youtube.com/watch?v=Kq5RV14D6qE](https://www.youtube.com/watch?v=Kq5RV14D6qE)
 
 ## Video transcription
+
 The video is hosted by "Vector Stellar" (so we know we're on the right track), and while it is super interesting and has a very nice soundtrack, the flag is nowhere to be seen yet.
 But, like any good YouTuber would, Vector Stellar asks us in the description to "check out my other videos". 
 So let's visit [Vector's channel](https://www.youtube.com/@VectorStellar), where we find a "numbers in ghent" video: [https://www.youtube.com/watch?v=K7GsJHu-ppY](https://www.youtube.com/watch?v=K7GsJHu-ppY)
