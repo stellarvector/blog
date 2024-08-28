@@ -15,7 +15,7 @@ collections:
     permalink: "/:collection/:path"
 
 # THEME SETTINGS
-logo: "/assets/images/logo/stellar-vector-main-round-transparant.png"
+logo: "https://www.stellarvector.be/assets/branding/logo/circle-dark.svg"
 color_scheme: light
 
 search_enabled: true
@@ -31,7 +31,7 @@ search:
 
 mermaid:
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-  version: "9.1.3"
+  version: "11.0.2"
 
 aux_links:
 aux_links_new_tab: true
@@ -39,8 +39,8 @@ nav_external_links:
   - title: "Github (stellarvector)"
     url: https://github.com/stellarvector/blog
     hide_icon: false
-  - title: "Twitter (@stellar_vector)"
-    url: https://twitter.com/stellar_vector
+  - title: "Find Stellar Vector online"
+    url: https://find.stellarvector.be/
     hide_icon: false
 
 heading_anchors: true
