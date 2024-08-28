@@ -39,9 +39,11 @@ nav_external_links:
   - title: "Github (stellarvector)"
     url: https://github.com/stellarvector/blog
     hide_icon: false
+    opens_in_new_tab: true
   - title: "Find Stellar Vector online"
     url: https://find.stellarvector.be/
     hide_icon: false
+    opens_in_new_tab: true
 
 heading_anchors: true
 
