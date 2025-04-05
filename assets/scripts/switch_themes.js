@@ -13,6 +13,12 @@ function activateTheme(theme) {
     if (localStorage) {
         localStorage.setItem("preferred-theme", theme);
     }
+
+    if (theme === "dark") {
+        document.getElementsByClassName("site-logo")[0]?.classList.add("dark");
+    } else {
+        document.getElementsByClassName("site-logo")[0]?.classList.remove("dark");
+    }
 }
 
 function switchTheme() {

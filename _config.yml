@@ -19,7 +19,7 @@ sass:
   quite_deps: true
 
 # THEME SETTINGS
-logo: "https://www.stellarvector.be/assets/branding/logo/circle-dark.svg"
+logo: "https://stellarvector.be/assets/logo/logo-light.png"
 color_scheme: light
 
 search_enabled: true

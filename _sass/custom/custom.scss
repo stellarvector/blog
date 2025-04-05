@@ -1,6 +1,14 @@
 $sv-red: #b21010;
 $sv-red-transparent: #b2101044;
 
+.site-logo {
+    background-image: url("https://stellarvector.be/assets/logo/logo-light.png");
+
+    &.dark {
+        background-image: url("https://stellarvector.be/assets/logo/logo-dark.png") !important;
+    }
+}
+
 .tag,
 .category {
     border-radius: 4px;
