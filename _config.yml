@@ -14,6 +14,10 @@ collections:
     output: true
     permalink: "/:collection/:path"
 
+sass:
+  style: compressed
+  quite_deps: true
+
 # THEME SETTINGS
 logo: "https://www.stellarvector.be/assets/branding/logo/circle-dark.svg"
 color_scheme: light
