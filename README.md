@@ -6,16 +6,16 @@ When adding or editing a writeup, please use the instructions below.
 
 ## Adding a writeup
 
-When adding a writeup, please use the included `sv-commands.sh` and the function `sv-add-writeup` in it to generate the writeup template.
+When adding a writeup, please use the included `blog.py` script to generate the writeup template.
 
 Usage:
 
-1. `source ./sv-commands.sh`
-2. `sv-add-writer` (if you haven't done this yet previously)
+1. `python3 blog.py`
+2. choose `1` to add a writer profile (if you haven't done this yet previously)
 3. Enter the information requested in the prompts
-4. `sv-add-writeup`
+4. choose `2`
 5. Enter the information requested in the prompts
-6. Edit ONLY the file the output points you to or the assets directory
+6. Edit ONLY the file the output points you to and the assets directory for images/attachments
 7. Submit a PR to the repo
 8. We thank you for your contribution!!!
 
@@ -31,8 +31,9 @@ Also add a small changelog message at the end of the writeup explaining what cha
 
 ## Running locally
 
-It should be as easy as (you might need to use sudo):
+It should be as easy as (you might need to use sudo, but ideally use rvm):
 
-1. `bundle install`
-2. `bundle exec jekyll serve`
-3. go to http://127.0.0.1:4000/
+1. (`rvm use`)
+2. `bundle install`
+3. `bundle exec jekyll serve`
+4. go to http://127.0.0.1:4000/
