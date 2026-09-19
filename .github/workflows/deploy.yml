@@ -1,0 +1,104 @@
+name: Deploy Hugo site to Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: "0.165.0"
+      HUGO_ENVIRONMENT: production
+      HUGO_ENV: production
+      HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+          cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Cache Hugo resources
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/hugo_cache
+          key: ${{ runner.os }}-hugocache-${{ hashFiles('package-lock.json', 'go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-hugocache-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Build with Hugo
+        run: hugo --gc --minify
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      - name: Upload preview artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hugo-build-preview
+          path: ./public
+          retention-days: 7
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
