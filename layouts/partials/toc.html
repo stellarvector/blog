@@ -1,0 +1,21 @@
+{{- /*
+    One TOC element for every breakpoint. It ships CLOSED: <details>/<summary>
+    is natively operable without JavaScript, so a closed panel costs a no-JS
+    reader one tap and nothing else. Shipping it open and letting main.js
+    collapse it below lg meant every phone painted the article pushed down by a
+    full table of contents and then snapped it back up once the deferred bundle
+    ran -- a guaranteed layout shift on the most common reading path. main.js
+    now opens it at lg instead, where it lives in its own column and expanding
+    it moves nothing.
+*/ -}}
+{{- if .TableOfContents -}}
+<details id="toc" class="sv-toc rounded-md border border-line-strong bg-card">
+    <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 py-2">
+        <span class="sv-section-title sv-prompt">on this page</span>
+        {{ partial "icon.html" (dict "name" "chevron" "class" "w-4 h-4 shrink-0 transition-transform duration-200") }}
+    </summary>
+    <nav aria-label="Table of contents" class="px-4 pb-3">
+        {{ .TableOfContents }}
+    </nav>
+</details>
+{{- end -}}

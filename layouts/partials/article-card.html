@@ -1,0 +1,65 @@
+{{- /*
+    Writeup card. Text-first by design: no post carries a cover image, so an
+    image slot would only ever render a placeholder and cost vertical space on
+    the phone screens most of this traffic comes from.
+
+        {{ partial "article-card.html" $page }}
+        {{ partial "article-card.html" (dict "Page" $page "compact" true) }}
+*/ -}}
+{{- $p := . -}}
+{{- $compact := false -}}
+{{- if reflect.IsMap . -}}
+    {{- $p = .Page -}}
+    {{- $compact = .compact | default false -}}
+{{- end -}}
+
+{{- /* hover/focus use accent-light, not accent: against the card surface
+       accent is only 2.69:1 in dark mode, so the one signal that says "this
+       card is a link" was fainter than its resting border. */ -}}
+<article class="group relative flex h-full min-w-0 flex-col rounded-md border border-line-strong bg-card
+                transition-colors duration-200 hover:border-accent-light focus-within:border-accent-light">
+    <div class="flex flex-1 flex-col gap-3 p-4 sm:p-5">
+        <div class="flex flex-wrap items-center gap-2">
+            {{- /* Static, because the card is one big stretched link. It also
+                   renders flatter than the linked pills elsewhere, so a chip
+                   that cannot be tapped does not look like one that can. */ -}}
+            {{ with $p.Params.category }}
+                {{ partial "category-pill.html" (dict "name" . "static" true "class" "sv-tag-static") }}
+            {{ end }}
+            {{ if $p.Params.featured }}
+                <span class="sv-tag sv-tag-accent">featured</span>
+            {{ end }}
+        </div>
+
+        <h3 class="!mt-0 !mb-0 text-lg sm:text-xl">
+            {{- /* The whole card is the hit target via this stretched link, so
+                   there is still exactly one link in the accessibility tree. */ -}}
+            <a href="{{ $p.RelPermalink }}"
+               class="text-heading no-underline before:absolute before:inset-0 before:content-['']
+                      hover:text-link hover:no-underline focus:outline-none"
+               data-umami-event="click: writeup-card">
+                <span class="text-accent-light font-mono" aria-hidden="true">&gt;&nbsp;</span>{{ $p.Title }}
+            </a>
+        </h3>
+
+        {{ with $p.Params.summary }}
+            <p class="text-sm leading-relaxed text-muted text-pretty {{ if $compact }}line-clamp-3{{ end }}">
+                {{ . }}
+            </p>
+        {{ end }}
+
+        <div class="sv-label mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 pt-1 normal-case">
+            {{ with $p.Params.author }}
+                {{ $authors := . }}
+                {{ if not (reflect.IsSlice $authors) }}{{ $authors = slice $authors }}{{ end }}
+                <span class="min-w-0 truncate">
+                    by {{ range $i, $a := $authors }}{{ if $i }}, {{ end }}{{ with index hugo.Data.authors $a }}{{ .name }}{{ else }}{{ $a }}{{ end }}{{ end }}
+                </span>
+                <span class="text-line-strong" aria-hidden="true">/</span>
+            {{ end }}
+            <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2, 2006" }}</time>
+            <span class="text-line-strong" aria-hidden="true">/</span>
+            <span>{{ $p.ReadingTime }} min</span>
+        </div>
+    </div>
+</article>

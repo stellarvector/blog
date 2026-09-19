@@ -1,0 +1,13 @@
+{{- /* {{< notice warning title="Heads up" >}} ... {{< /notice >}} */ -}}
+{{- $kind := .Get 0 | default "info" -}}
+{{- $tone := dict
+    "info"    "border-accent bg-accent-tint"
+    "warning" "border-error-solid bg-error-tint"
+    "success" "border-success-solid bg-success-tint"
+-}}
+<div class="my-6 rounded-md rounded-l-none border border-l-2 {{ index $tone $kind | default (index $tone "info") }} px-4 py-3">
+    {{ with .Get "title" }}
+        <p class="sv-label !mb-1 text-heading">{{ . }}</p>
+    {{ end }}
+    <div class="[&>*:first-child]:mt-0 [&>*:last-child]:mb-0">{{ .Inner | markdownify }}</div>
+</div>

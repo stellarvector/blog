@@ -1,0 +1,89 @@
+{{ define "main" }}
+{{- $pages := .Pages -}}
+{{- $isArchive := or (eq .Section "writeups") (eq .Type "category") (eq .Type "tags") -}}
+{{- $heading := .Title -}}
+{{- $scope := "" -}}
+{{- $crumbs := slice -}}
+
+{{- if $isArchive -}}
+    {{- $heading = "Writeups" -}}
+    {{- $writeupsRoot := relURL "/writeups/" -}}
+    {{- if eq .RelPermalink $writeupsRoot -}}
+        {{- $scope = "full archive" -}}
+        {{- $pages = where site.RegularPages "Section" "writeups" -}}
+        {{- $crumbs = slice (dict "title" "writeups") -}}
+    {{- else if eq .Section "writeups" -}}
+        {{- if eq .Parent.RelPermalink $writeupsRoot -}}
+            {{- $scope = .Title -}}
+            {{- $pages = .RegularPagesRecursive -}}
+            {{- $crumbs = slice (dict "title" "writeups" "url" $writeupsRoot) (dict "title" .Title) -}}
+        {{- else -}}
+            {{- $scope = printf "%s %s" .Parent.Title .Title -}}
+            {{- $pages = .Pages -}}
+            {{- $crumbs = slice (dict "title" "writeups" "url" $writeupsRoot)
+                                (dict "title" .Parent.Title "url" .Parent.RelPermalink)
+                                (dict "title" .Title) -}}
+        {{- end -}}
+    {{- else -}}
+        {{- $scope = cond (eq .Type "tags") (printf "#%s" (.Title | lower)) (.Title | lower) -}}
+        {{- $pages = .Pages -}}
+        {{- $crumbs = slice (dict "title" "writeups" "url" $writeupsRoot)
+                            (dict "title" (cond (eq .Type "tags") "tag" "category"))
+                            (dict "title" (.Title | lower)) -}}
+    {{- end -}}
+{{- end -}}
+
+<div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+    <header class="min-w-0">
+        {{ with $crumbs }}{{ partial "breadcrumbs.html" (dict "items" .) }}{{ end }}
+
+        <h1 class="mt-3 !mb-0">
+            <span class="text-accent-light font-mono" aria-hidden="true">&gt;&nbsp;</span>{{ $heading }}
+        </h1>
+
+        <p class="sv-label mt-3 normal-case">
+            {{ with $scope }}{{ . }} <span class="text-line-strong" aria-hidden="true">/</span> {{ end }}
+            {{ len $pages }} writeup{{ if ne (len $pages) 1 }}s{{ end }}
+        </p>
+
+        {{ with .Content }}<div class="prose mt-4 max-w-none">{{ . }}</div>{{ end }}
+    </header>
+
+    <div class="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:items-start lg:gap-10">
+        <div class="min-w-0">
+            {{ if $isArchive }}
+                {{- /* Filters collapse on mobile so the results stay on screen. */}}
+                <details class="sv-toc mb-6 rounded-md border border-line-strong bg-card lg:hidden">
+                    <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 py-2">
+                        <span class="sv-section-title sv-prompt">filter archive</span>
+                        {{ partial "icon.html" (dict "name" "chevron" "class" "w-4 h-4 shrink-0 transition-transform duration-200") }}
+                    </summary>
+                    <div class="px-4 pb-4">{{ partial "archive-filters.html" (dict "page" .) }}</div>
+                </details>
+            {{ end }}
+
+            {{ if $pages }}
+                <div class="grid gap-4 sm:grid-cols-2">
+                    {{ range $pages.ByDate.Reverse }}
+                        {{ partial "article-card.html" (dict "Page" . "compact" true) }}
+                    {{ end }}
+                </div>
+            {{ else }}
+                <div class="sv-terminal" data-title="no results">
+                    <p>No writeups match this selection.
+                       <a href="{{ relURL "/writeups/" }}">Return to the full archive</a>.</p>
+                </div>
+            {{ end }}
+        </div>
+
+        {{ if $isArchive }}
+            <aside class="hidden lg:block">
+                <div class="sticky top-28">
+                    <h2 class="sr-only">Filter archive</h2>
+                    {{ partial "archive-filters.html" (dict "page" .) }}
+                </div>
+            </aside>
+        {{ end }}
+    </div>
+</div>
+{{ end }}

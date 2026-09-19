@@ -1,0 +1,114 @@
+/*
+ * Syntax highlighting (Chroma), class-based so it can follow the theme.
+ *
+ * Hugo's default `noClasses: true` bakes the palette into inline style
+ * attributes on every token, including the code block's background. Inline
+ * styles outrank stylesheets, so a monokai block stayed dark in light mode and
+ * no rule here could reach it. hugo.yaml sets `noClasses: false`.
+ *
+ * Every colour is expressed as light-dark(github, monokai) rather than being
+ * scoped under a `.light` selector. That matters for print: the print styles
+ * force `color-scheme: light`, and light-dark() follows automatically, so a
+ * reader in dark mode does not print monokai's near-white tokens onto white
+ * paper. A class-scoped palette would have needed the whole light palette
+ * duplicated inside @media print.
+ *
+ * Everything lives in @layer utilities. Unlayered rules outrank every layered
+ * one regardless of specificity, which would silently beat the theme's own
+ * prose styles.
+ *
+ * REGENERATE:
+ *   hugo gen chromastyles --style=github  > light.css
+ *   hugo gen chromastyles --style=monokai > dark.css
+ *   then re-run the merge generator recorded in this file's git history, which
+ *   pairs each token colour into light-dark() and wraps the result in a layer.
+ */
+
+@layer utilities {
+    /*
+     * Code surface: white on light, the theme's own raised surface on dark, so
+     * the code body stays in the same family as the .sv-code-header above it.
+     */
+    .chroma {
+        background-color: light-dark(#ffffff, var(--color-surface));
+        color: light-dark(#1f2328, #f8f8f2);
+    }
+
+    .chroma { -webkit-text-size-adjust: none; }
+    .chroma .err { color: light-dark(#f6f8fa, #960050); background-color: light-dark(#82071e, #1e0010); }
+    .chroma .lnlinks { color: inherit; text-decoration: none; outline: none; }
+    .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+    .chroma .lntable { padding: 0; margin: 0; border: 0; border-spacing: 0; }
+    .chroma .hl { background-color: light-dark(#dedede, #3c3d38); }
+    .chroma .lnt { color: #7f7f7f; padding: 0 0.4em 0 0.4em; white-space: pre; }
+    .chroma .ln { color: #7f7f7f; padding: 0 0.4em 0 0.4em; white-space: pre; }
+    .chroma .line { display: flex; }
+    .chroma .k { color: light-dark(#cf222e, #66d9ef); }
+    .chroma .kc { color: light-dark(#cf222e, #66d9ef); }
+    .chroma .kd { color: light-dark(#cf222e, #66d9ef); }
+    .chroma .kn { color: light-dark(#cf222e, #f92672); }
+    .chroma .kp { color: light-dark(#cf222e, #66d9ef); }
+    .chroma .kr { color: light-dark(#cf222e, #66d9ef); }
+    .chroma .kt { color: light-dark(#cf222e, #66d9ef); }
+    .chroma .na { color: light-dark(#1f2328, #a6e22e); }
+    .chroma .nc { color: light-dark(#1f2328, #a6e22e); }
+    .chroma .no { color: light-dark(#0550ae, #66d9ef); }
+    .chroma .nd { color: light-dark(#0550ae, #a6e22e); }
+    .chroma .ni { color: light-dark(#6639ba, currentColor); }
+    .chroma .nl { color: light-dark(#900, currentColor); font-weight: bold; }
+    .chroma .nn { color: light-dark(#24292e, currentColor); }
+    .chroma .nx { color: light-dark(#1f2328, #a6e22e); }
+    .chroma .nt { color: light-dark(#0550ae, #f92672); }
+    .chroma .nb { color: light-dark(#6639ba, currentColor); }
+    .chroma .bp { color: light-dark(#6a737d, currentColor); }
+    .chroma .nv { color: light-dark(#953800, currentColor); }
+    .chroma .vc { color: light-dark(#953800, currentColor); }
+    .chroma .vg { color: light-dark(#953800, currentColor); }
+    .chroma .vi { color: light-dark(#953800, currentColor); }
+    .chroma .vm { color: light-dark(#953800, currentColor); }
+    .chroma .nf { color: light-dark(#6639ba, #a6e22e); }
+    .chroma .fm { color: light-dark(#6639ba, #a6e22e); }
+    .chroma .s { color: light-dark(#0a3069, #e6db74); }
+    .chroma .sa { color: light-dark(#0a3069, #e6db74); }
+    .chroma .sb { color: light-dark(#0a3069, #e6db74); }
+    .chroma .sc { color: light-dark(#0a3069, #e6db74); }
+    .chroma .dl { color: light-dark(#0a3069, #e6db74); }
+    .chroma .sd { color: light-dark(#0a3069, #e6db74); }
+    .chroma .s2 { color: light-dark(#0a3069, #e6db74); }
+    .chroma .se { color: light-dark(#0a3069, #ae81ff); }
+    .chroma .sh { color: light-dark(#0a3069, #e6db74); }
+    .chroma .si { color: light-dark(#0a3069, #e6db74); }
+    .chroma .sx { color: light-dark(#0a3069, #e6db74); }
+    .chroma .sr { color: light-dark(#0a3069, #e6db74); }
+    .chroma .s1 { color: light-dark(#0a3069, #e6db74); }
+    .chroma .ss { color: light-dark(#032f62, #e6db74); }
+    .chroma .m { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .mb { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .mf { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .mh { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .mi { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .il { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .mo { color: light-dark(#0550ae, #ae81ff); }
+    .chroma .o { color: light-dark(#0550ae, #f92672); }
+    .chroma .ow { color: light-dark(#0550ae, #f92672); }
+    .chroma .or { color: light-dark(#0550ae, #f92672); }
+    .chroma .p { color: light-dark(#1f2328, #f8f8f2); }
+    .chroma .c { color: light-dark(#57606a, #75715e); }
+    .chroma .ch { color: light-dark(#57606a, #75715e); }
+    .chroma .cm { color: light-dark(#57606a, #75715e); }
+    .chroma .c1 { color: light-dark(#57606a, #75715e); }
+    .chroma .cs { color: light-dark(#57606a, #75715e); }
+    .chroma .cp { color: light-dark(#57606a, #75715e); }
+    .chroma .cpf { color: light-dark(#57606a, #75715e); }
+    .chroma .gd { color: light-dark(#82071e, #f92672); background-color: light-dark(#ffebe9, transparent); }
+    .chroma .ge { color: light-dark(#1f2328, currentColor); font-style: italic; }
+    .chroma .gi { color: light-dark(#116329, #a6e22e); background-color: light-dark(#dafbe1, transparent); }
+    .chroma .go { color: light-dark(#1f2328, currentColor); }
+    .chroma .gl { text-decoration: underline; }
+    .chroma .w { color: light-dark(#fff, currentColor); }
+    .chroma .ne { color: light-dark(currentColor, #a6e22e); }
+    .chroma .l { color: light-dark(currentColor, #ae81ff); }
+    .chroma .ld { color: light-dark(currentColor, #e6db74); }
+    .chroma .gs { font-weight: bold; }
+    .chroma .gu { color: light-dark(currentColor, #75715e); }
+}

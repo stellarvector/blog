@@ -1,0 +1,16 @@
+{{- /*
+    Heading render hook. Adds the permalink anchor at build time rather than
+    from JavaScript, so it exists without JS and the icon markup lives in one
+    place (partials/icon.html) instead of being duplicated as a JS string.
+
+    Levels 2-4 only: h1 is the page title, and h5/h6 are too deep to warrant a
+    link target in these writeups.
+*/ -}}
+<h{{ .Level }} id="{{ .Anchor }}">
+    {{- .Text | safeHTML -}}
+    {{- if and (ge .Level 2) (le .Level 4) }}
+        <a class="sv-anchor" href="#{{ .Anchor }}" aria-label="Link to this section">
+            {{- partial "icon.html" (dict "name" "link" "class" "w-4 h-4") -}}
+        </a>
+    {{- end -}}
+</h{{ .Level }}>

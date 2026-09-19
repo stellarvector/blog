@@ -1,6 +1,17 @@
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-.bundle/
-vendor
+# Hugo build output
+public/
+
+# Hugo cache
+resources/
+.hugo_build.lock
+
+# Hugo module / npm caches, when built the way CI does (see .gitlab-ci.yml)
+.cache/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+node_modules
+
+hugo_stats.json

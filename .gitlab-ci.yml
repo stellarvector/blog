@@ -1,0 +1,68 @@
+# Hugo's own image, pinned. It is the only one that carries everything this
+# build needs in one place:
+#
+#   - Hugo 0.165 extended     (the site needs >= 0.161)
+#   - Go                      (the theme is a Hugo module, github.com/stellarvector/theme)
+#   - Node + npm              (Hugo shells out to the Tailwind CSS v4 CLI)
+#
+# The previous image (registry.gitlab.com/pages/hugo/hugo_extended:latest)
+# cannot build this site at all: it ships Hugo 0.140 and has neither Go nor
+# Node, so the module fetch and the CSS build both fail.
+#
+# entrypoint: [""] is required -- the image's own entrypoint is a Hugo wrapper,
+# not a shell, so without this the runner cannot start the job script.
+image:
+  name: ghcr.io/gohugoio/hugo:v0.165.0
+  entrypoint: [""]
+
+variables:
+  HUGO_ENVIRONMENT: production
+  HUGO_ENV: production
+  # The image points these at /cache and /go, which live outside the project
+  # and so can never be cached by GitLab. Move them inside $CI_PROJECT_DIR.
+  HUGO_CACHEDIR: $CI_PROJECT_DIR/.cache/hugo
+  GOPATH: $CI_PROJECT_DIR/.cache/go
+  npm_config_cache: $CI_PROJECT_DIR/.cache/npm
+
+default:
+  # Keyed on the two lock files: a dependency change invalidates the cache,
+  # an ordinary content commit reuses it.
+  cache:
+    key:
+      files:
+        - package-lock.json
+        - go.sum
+    paths:
+      - .cache/
+      - node_modules/
+  before_script:
+    # ci, not install: it installs exactly what package-lock.json pins and
+    # fails loudly if the two have drifted apart.
+    - npm ci
+
+.build: &build
+  script:
+    - hugo --gc --minify
+  artifacts:
+    paths:
+      - public
+
+# Every other branch builds but does not deploy, so a broken site is caught
+# before it reaches the default branch rather than on the deploy itself. No
+# merge-request rule is set on purpose: adding one would create a second,
+# duplicate pipeline for every push to a branch that has an open MR.
+build:
+  <<: *build
+  # Preview artifact only, unlike the Pages deploy, so it does not linger.
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
+
+# GitLab Pages deploys from the default branch only.
+pages:
+  <<: *build
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

@@ -1,0 +1,16 @@
+{{- /* Tag chip. Tags read as #slug to separate them from categories. */ -}}
+{{- $name := "" }}{{ $class := "" }}{{ $context := . -}}
+{{- if reflect.IsMap . -}}
+    {{- $name = .name }}{{ $class = .class | default "" }}{{ $context = .context -}}
+{{- else -}}
+    {{- $name = . -}}
+{{- end -}}
+
+{{- with site.GetPage (printf "tags/%s" ($name | urlize)) -}}
+    {{- $active := and $context (eq $context.Page .) -}}
+    <a href="{{ .RelPermalink }}"
+       class="sv-tag no-underline hover:no-underline normal-case transition-colors duration-200
+              hover:border-accent hover:text-link {{ if $active }}sv-tag-accent{{ end }} {{ $class }}"
+       {{ if $active }}aria-current="page"{{ end }}
+       data-umami-event="click: tag-{{ .Title | anchorize }}">#{{ .Title | lower }}</a>
+{{- end -}}

@@ -1,0 +1,22 @@
+{{- /* Breadcrumb rendered as a shell path. The separators are decorative, so
+       they are hidden from assistive tech and the list carries the structure. */ -}}
+{{- $items := .items -}}
+<nav aria-label="Breadcrumb" class="min-w-0">
+    <ol class="flex flex-wrap items-center gap-x-1 gap-y-1 font-mono text-xs">
+        <li class="text-terminal" aria-hidden="true">$&nbsp;cd</li>
+        {{- $last := sub (len $items) 1 -}}
+        {{- range $i, $item := $items }}
+            <li class="flex min-w-0 items-center gap-x-1">
+                <span class="text-line-strong" aria-hidden="true">/</span>
+                {{ if $item.url }}
+                    <a href="{{ $item.url }}" class="truncate text-muted no-underline hover:text-link">{{ $item.title }}</a>
+                {{ else }}
+                    {{/* aria-current belongs to the final crumb only; a url-less
+                         middle crumb is a grouping label, not the current page. */}}
+                    <span class="truncate {{ if eq $i $last }}text-body{{ else }}text-muted{{ end }}"
+                          {{ if eq $i $last }}aria-current="page"{{ end }}>{{ $item.title }}</span>
+                {{ end }}
+            </li>
+        {{- end }}
+    </ol>
+</nav>
