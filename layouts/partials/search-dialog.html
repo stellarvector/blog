@@ -1,0 +1,33 @@
+{{- /*
+    Single search surface for every breakpoint. A native <dialog> gives the
+    modal semantics, focus containment and Escape handling for free; the JS
+    only wires up open/close, the combobox listbox and the results.
+*/ -}}
+<dialog id="search-dialog"
+        class="w-full max-w-2xl rounded-md border border-accent bg-card p-0 text-body shadow-2xl
+               backdrop:bg-black/70 backdrop:backdrop-blur-sm">
+    <div class="flex items-center gap-2 border-b border-line-strong px-4 py-3">
+        <span class="font-mono text-sm text-terminal" aria-hidden="true">$</span>
+        <input id="search-input" type="search" autocomplete="off" spellcheck="false"
+               class="min-w-0 flex-1 bg-transparent font-mono text-base text-body outline-none
+                      placeholder:text-muted"
+               placeholder="grep writeups&hellip;"
+               role="combobox" aria-expanded="false" aria-controls="search-results"
+               aria-autocomplete="list" aria-label="Search writeups">
+        <button type="button" data-search-close
+                class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm text-muted
+                       cursor-pointer transition-colors duration-200 hover:text-link"
+                aria-label="Close search">
+            {{ partial "icon.html" (dict "name" "close" "class" "w-5 h-5") }}
+        </button>
+    </div>
+
+    {{- /* Height comes from custom.css: 60vh is measured against the LARGE
+           viewport, so with a soft keyboard up the lower results sat behind
+           it. dvh tracks what is actually visible, with a vh fallback. */ -}}
+    <div id="search-results" role="listbox" aria-label="Search results"
+         class="sv-search-results overflow-y-auto overscroll-contain"></div>
+
+    <p id="search-status" role="status" aria-live="polite"
+       class="sv-label border-t border-line px-4 py-2 normal-case"></p>
+</dialog>

@@ -1,0 +1,9 @@
+{{- $btn := "inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-sm border border-line-strong bg-card px-3 py-2 font-mono text-xs uppercase tracking-widest text-muted cursor-pointer transition-colors duration-200 hover:border-accent hover:text-link" -}}
+<button type="button" data-print class="{{ $btn }}" data-umami-event="click: print-writeup">
+    {{ partial "icon.html" (dict "name" "printer" "class" "w-4 h-4") }}
+    <span>print</span>
+</button>
+<button type="button" data-share class="{{ $btn }}" data-umami-event="click: share-writeup">
+    {{ partial "icon.html" (dict "name" "share" "class" "w-4 h-4") }}
+    <span data-share-label>share</span>
+</button>

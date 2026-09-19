@@ -1,0 +1,32 @@
+{{- /*
+    Search corpus. Fetched lazily by assets/js/search.js on first open, so it
+    never competes with the article for bandwidth.
+
+    It carries only what the UI reads back: `summary` and `date` were dropped
+    because the renderer never reaches them (the snippet falls back to summary
+    only when content is empty, which it never is, and the UI shows
+    `formattedDate` and never sorts client-side). Whitespace in `.Plain` is
+    collapsed so a snippet cut from mid-article reads as one line instead of
+    carrying the source's paragraph breaks into a 3-line result row.
+
+    Content is NOT truncated, deliberately. Measured on the 13 writeups here:
+    the whole index is 25 KB gzipped, ~2 KB per writeup, and capping content at
+    8000 characters saved 7% while cutting the tail off the two longest
+    writeups -- and a match deep inside a long writeup is exactly what gets
+    searched for on this site. Past roughly a hundred writeups (~200 KB
+    gzipped) the answer is a real index such as Pagefind, not a smaller field
+    list here.
+*/ -}}
+[
+{{- range $index, $page := .Site.RegularPages -}}
+{{- if $index -}}, {{- end -}}
+{
+    "title": {{ $page.Title | jsonify }},
+    "content": {{ $page.Plain | plainify | replaceRE "\\s+" " " | jsonify }},
+    "permalink": {{ $page.RelPermalink | jsonify }},
+    "formattedDate": {{ $page.Date.Format "Jan 2, 2006" | jsonify }},
+    "category": {{ .Params.category | jsonify }},
+    "tags": {{ if .Params.tags }}{{ .Params.tags | jsonify }}{{ else }}[]{{ end }}
+}
+{{- end -}}
+]

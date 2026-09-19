@@ -1,0 +1,500 @@
+/*
+ * Blog-specific overrides.
+ *
+ * Everything structural -- palette, type scale, prose, focus rings, and the
+ * sv-* terminal component set -- comes from the theme module (css/main.css).
+ * Only what the theme cannot know about belongs here: markup this site does
+ * not author (Hugo's chroma output, .TableOfContents), and a handful of
+ * mobile/print affordances.
+ */
+
+@custom-variant light (&:where(.light, .light *));
+
+@layer base {
+    /* Print-only furniture. Revealed by the @media print block at the bottom. */
+    .sv-print-only {
+        display: none;
+    }
+
+    /*
+     * No 300ms tap delay and no grey tap flash.
+     *
+     * overscroll-behavior-y is deliberately NOT set here: on the root element
+     * it also cancels pull-to-refresh, which is a gesture readers expect on a
+     * content site. The two panels that actually needed chaining protection
+     * (#menu-panel, #search-results) carry overscroll-contain themselves.
+     */
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    a, button, summary {
+        touch-action: manipulation;
+    }
+
+    /* viewport-fit=cover lets the page reach under notches, so the gutters
+       have to be paid back here or content sits under the rounded corners. */
+    body {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    /* Long tokens in CTF writeups (hashes, base64, flags) must not force the
+       whole page to scroll sideways on a 375px screen. */
+    .prose :where(p, li, td, th) {
+        overflow-wrap: break-word;
+    }
+
+}
+
+/*
+ * These rules override the theme's element-level `a` and heading styles, which
+ * it declares in @layer utilities. Cascade layers outrank specificity, so a
+ * @layer components block here would lose every one of those contests no
+ * matter how specific its selectors were. Same layer, later source order.
+ */
+@layer utilities {
+    /*
+     * Anything that cannot wrap scrolls inside its own box rather than widening
+     * the page. Tables and display equations are the two that actually reach
+     * past 375px in these writeups.
+     */
+    .prose :where(table) {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    mjx-container[display="true"] {
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        /* Room for the scrollbar so it never sits on top of the equation. */
+        padding-bottom: 0.25rem;
+    }
+
+    /*
+     * Section heading inside a page ("featured", "recent", "on this page").
+     * These are signposts between blocks of content, so they carry the green
+     * shell prompt from .sv-prompt and sit a step above the metadata labels
+     * they used to share .sv-label with -- at 12px muted they were not
+     * readable. Margins stay out of it: the h2 callers set their own with
+     * important utilities, and the <summary> callers want none.
+     */
+    .sv-section-title {
+        @apply font-mono text-sm font-bold uppercase tracking-[0.15em] text-heading sm:text-base;
+        line-height: 1.4;
+    }
+
+    /* Sticky chrome has to clear the status bar under viewport-fit=cover. */
+    .sv-safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .sv-safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /*
+     * Collapsible panels (TOC, mobile archive filters). The marker is removed
+     * on both engines and replaced by the chevron the partial renders.
+     */
+    .sv-toc > summary::-webkit-details-marker { display: none; }
+    .sv-toc > summary::marker { content: ""; }
+
+    .sv-toc[open] > summary svg { transform: rotate(180deg); }
+
+    /*
+     * Hugo owns the markup inside .TableOfContents, so it can only be reached
+     * by descendant selectors from here.
+     */
+    .sv-toc nav ul {
+        @apply m-0 list-none space-y-0.5 p-0;
+    }
+
+    .sv-toc nav ul ul {
+        @apply mt-0.5 ml-3 border-l border-line pl-3;
+    }
+
+    .sv-toc nav li {
+        @apply m-0;
+    }
+
+    .sv-toc nav a {
+        @apply flex min-h-11 items-center rounded-sm py-1.5 font-mono text-xs leading-snug
+               text-muted no-underline transition-colors duration-200
+               hover:text-link hover:no-underline lg:min-h-0;
+    }
+
+    .sv-toc nav a.active {
+        @apply text-link;
+    }
+
+    .sv-toc nav a.active::before {
+        content: ">\00a0";
+        color: var(--color-accent-light);
+    }
+
+    /*
+     * Code blocks. Chroma emits .highlight > pre; main.js prepends a header
+     * bar to it, so the top corners of the pre are squared off to meet it.
+     */
+    .prose .highlight {
+        @apply my-6 overflow-hidden rounded-md border border-line-strong;
+    }
+
+    .prose .highlight pre {
+        @apply my-0 rounded-none border-0 border-l-2 border-accent;
+    }
+
+    .sv-code-header {
+        @apply flex items-center justify-between gap-2 border-b border-line-strong bg-card px-3 py-1.5;
+    }
+
+    .sv-code-lang {
+        @apply font-mono text-xs uppercase tracking-[0.2em] text-muted;
+    }
+
+    .sv-code-copy {
+        @apply min-h-11 cursor-pointer rounded-sm border border-line-strong bg-surface px-3 py-1
+               font-mono text-xs uppercase tracking-widest text-muted transition-colors duration-200
+               hover:border-accent hover:text-link;
+    }
+
+    /* Chroma's line numbers are decorative: never let them into a copy. */
+    .prose .highlight .lnt,
+    .prose .highlight .ln {
+        @apply select-none opacity-50;
+    }
+
+    /* Heading anchors: visible on hover, and always once focused. */
+    .sv-anchor {
+        @apply ml-2 inline-flex align-middle text-accent-light opacity-0 no-underline
+               transition-opacity duration-200;
+    }
+
+    :where(h2, h3, h4):hover > .sv-anchor,
+    .sv-anchor:focus-visible {
+        @apply opacity-100;
+    }
+
+    /* Pointer-only reveal would strand touch users, so show it there always. */
+    @media (hover: none) {
+        .sv-anchor { @apply opacity-60; }
+    }
+
+    /*
+     * Command-palette placement: pinned below the top of the viewport instead
+     * of vertically centred. Dead-centre leaves the result list jumping about
+     * as it grows, and on a phone the keyboard covers it.
+     */
+    #search-dialog {
+        margin-block: 12vh auto;
+        margin-inline: auto;
+        width: calc(100% - 2rem);
+    }
+
+    @media (min-width: 40rem) {
+        #search-dialog { margin-block-start: 10vh; }
+    }
+
+    /* The theme underlines every <a>; result rows are blocks, not prose links. */
+    #search-dialog a,
+    #search-dialog a:hover {
+        @apply no-underline;
+    }
+
+    /*
+     * Enlarged image. A <dialog> is centred by the UA's `margin:auto`, but the
+     * moment its content is laid out as blocks the image sits top-left inside
+     * a box sized to the widest child. Centring both axes explicitly, only
+     * while open, keeps the image in the middle of the viewport.
+     */
+    .sv-lightbox[open] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin: auto;
+        max-height: 95dvh;
+    }
+
+    .sv-lightbox img {
+        @apply m-0 object-contain;
+        max-height: 80dvh;
+    }
+
+    /*
+     * The lightbox trigger is a real <button> so it is keyboard operable, but
+     * it must remain visually transparent -- it only wraps the image.
+     */
+    .sv-lightbox-trigger {
+        @apply my-8 block w-full cursor-zoom-in border-0 bg-transparent p-0;
+    }
+
+    /* Margin now belongs to the wrapper, so the image must not add its own. */
+    .prose :where(.sv-lightbox-trigger img) {
+        @apply my-0 block;
+    }
+
+    /*
+     * Mobile menu. Never taller than what is left of the viewport under the
+     * header, including the notch inset the header itself pays.
+     */
+    .sv-menu-panel {
+        max-height: calc(100dvh - 4rem - env(safe-area-inset-top, 0px));
+    }
+
+    /* Search results. Rendered by search.js, so styled by class here. */
+    .sv-result {
+        @apply block border-b border-line px-4 py-3 no-underline transition-colors duration-150
+               hover:bg-accent-tint hover:no-underline;
+    }
+
+    .sv-result[aria-selected="true"] {
+        @apply bg-accent-tint;
+    }
+
+    .sv-result mark {
+        @apply bg-transparent font-bold text-link;
+    }
+
+    /*
+     * Comfortable measure without narrowing the article box. The container
+     * keeps max-w-none so code blocks, tables and images still use the full
+     * column -- only the text-bearing blocks are capped, at the 65-75ch the
+     * eye can track. Below ~70ch of viewport this rule does nothing.
+     */
+    .sv-measure > :where(p, ul, ol, dl, blockquote, h1, h2, h3, h4, h5, h6) {
+        max-width: 70ch;
+    }
+
+    /* Fixed to the top edge, but clear of the status bar under viewport-fit=cover. */
+    .sv-safe-fixed-top {
+        top: env(safe-area-inset-top, 0px);
+    }
+
+    /*
+     * Results list. dvh follows the visible viewport, so the list shrinks when
+     * a soft keyboard opens instead of hiding its last rows behind it.
+     */
+    .sv-search-results {
+        max-height: 55dvh;
+    }
+
+    /*
+     * dvh fallback for engines that predate it. It has to be a @supports rule:
+     * written as a shadowed duplicate (max-height: 55vh; max-height: 55dvh) the
+     * CSS minifier drops the first line, so the fallback never reaches the
+     * browser at all -- which is what had quietly happened to the two lightbox
+     * rules above.
+     */
+    @supports not (height: 1dvh) {
+        .sv-search-results { max-height: 55vh; }
+        .sv-lightbox[open] { max-height: 95vh; }
+        .sv-lightbox img   { max-height: 80vh; }
+    }
+
+    /*
+     * Back-to-top. Visibility rather than display, so it is out of the tab
+     * order while hidden and switching states never reflows anything.
+     */
+    /*
+     * `display` is deliberately NOT set here: it is a utility on the element
+     * (inline-flex lg:hidden) so Tailwind's own ordering decides the contest.
+     * Declared in this block it would sit after .lg\:hidden in the same layer
+     * at equal specificity and win, putting the button on desktop too.
+     */
+    .sv-to-top {
+        @apply fixed z-1000 h-12 w-12 cursor-pointer items-center justify-center
+               rounded-full border border-line-strong bg-card text-body shadow-lg
+               transition-opacity duration-200 hover:border-accent-light hover:text-link;
+        right: max(1rem, env(safe-area-inset-right, 0px));
+        bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .sv-to-top.is-visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /*
+     * A chip that is not a link must not look like one. Used for the category
+     * inside an article card, where the whole card is already the hit target.
+     */
+    .sv-tag-static {
+        @apply border-transparent bg-surface text-muted;
+    }
+
+    /* The grid backdrop is atmosphere, not content: fade it out at the edges. */
+    .sv-grid-fade {
+        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 78%);
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 78%);
+    }
+}
+
+/*
+ * Print. Writeups get printed and handed around at CTF events, so a printout
+ * has to stand on its own: the Stellar Vector mark and the source URL repeat on
+ * every sheet, and page one opens with title, byline, date and tags.
+ *
+ * The repeating header/footer are CSS table groups, not position:fixed. A fixed
+ * box does repeat per page in some browsers but reserves NO space in the flow,
+ * so it prints straight over the text no matter where it is offset to. A
+ * table-header-group/table-footer-group is part of the table box: the browser
+ * repeats it and leaves room for it. That is why <main> becomes a table here
+ * and the three blocks must be siblings.
+ */
+@media print {
+    @page {
+        margin: 12mm;
+    }
+
+    /*
+     * Force the light palette regardless of the reader's theme. Every colour in
+     * the theme and in chroma.css is a light-dark() pair, so flipping
+     * color-scheme is all that is needed -- including syntax tokens, which
+     * would otherwise print near-white on white.
+     */
+    :root {
+        color-scheme: light !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    /*
+     * Site chrome only. Scoped to direct children of <body> on purpose: an
+     * unscoped `header`/`footer` also matches the writeup's own <header>
+     * (title, author, date) and its author footer, which are exactly the
+     * context a printout needs.
+     */
+    body > header,
+    body > footer,
+    aside,
+    dialog,
+    #reading-progress,
+    #to-top,
+    .sv-toc,
+    .sv-anchor,
+    [data-print],
+    [data-share],
+    [data-theme-toggle],
+    [data-search-open] {
+        display: none !important;
+    }
+
+    /* Reveal the print-only furniture; the table groups below re-specify the
+       two that must not be plain blocks. */
+    .sv-print-only {
+        display: block !important;
+    }
+
+    /* The table box that carries the repeating groups. */
+    main {
+        display: table !important;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .sv-print-body {
+        display: table-row-group !important;
+        max-width: none !important;
+        padding: 0 !important;
+    }
+
+    .sv-print-running-header {
+        display: table-header-group !important;
+    }
+
+    .sv-print-running-footer {
+        display: table-footer-group !important;
+    }
+
+    /*
+     * The group elements themselves cannot be styled like a flex row, so the
+     * visible bar is their inner box. Padding here becomes the gap between the
+     * running head and the text on every page.
+     */
+    .sv-print-running-header > *,
+    .sv-print-running-footer > * {
+        vertical-align: middle;
+    }
+
+    .sv-print-running-header {
+        border-bottom: 1px solid #ccc;
+    }
+
+    .sv-print-running-footer {
+        border-top: 1px solid #ccc;
+    }
+
+    .sv-print-running-header,
+    .sv-print-running-footer {
+        font-family: var(--font-mono);
+        font-size: 8pt;
+        color: #555;
+    }
+
+    .sv-print-logo {
+        height: 9mm;
+        width: auto;
+        margin-right: 3mm;
+    }
+
+    /* Title block on page one. */
+    .sv-print-meta {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid #ccc;
+        font-family: var(--font-mono);
+        font-size: 9pt;
+        color: #333;
+    }
+
+    .sv-print-meta dt {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .sv-print-meta dd {
+        margin: 0 0 0.35rem;
+    }
+
+    /* One column; nothing floats beside the text. */
+    main .grid {
+        display: block !important;
+    }
+
+    .prose {
+        max-width: none !important;
+    }
+
+    .prose a::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        word-break: break-all;
+    }
+
+    .prose pre,
+    .prose .highlight {
+        border: 1px solid #999 !important;
+        white-space: pre-wrap;
+        break-inside: avoid;
+    }
+
+    .prose img {
+        max-width: 100% !important;
+        break-inside: avoid;
+    }
+
+    h1, h2, h3 { break-after: avoid; }
+
+    .sv-print-meta, .sv-tag { break-inside: avoid; }
+}

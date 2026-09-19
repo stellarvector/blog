@@ -1,0 +1,35 @@
+vikvanderlinden:
+  name: "vikvanderlinden"
+  bio: "Stellar Vector team lead. Specializes in web and network security."
+  avatar: "https://github.com/vikvanderlinden.png"
+  links:
+    - name: "GitHub"
+      url: "https://github.com/vikvanderlinden"
+r98inver:
+  name: "r98inver"
+  bio: "Core member of Stellar Vector. Specializes in Cryptography and Mathematical challenges."
+  avatar: "https://github.com/r98inver.png"
+  links:
+    - name: "GitHub"
+      url: "https://github.com/r98inver"
+victor:
+  name: "Victor Le Pochat"
+  bio: "Member of Stellar Vector. Passionate about binary exploitation."
+  avatar: "https://lepoch.at/images/me_2022.jpg" # Placeholder
+  links:
+    - name: "Website"
+      url: "https://lepoch.at/"
+tomvg:
+  name: "tomvg"
+  bio: "Member of Stellar Vector. Security researcher and CTF player."
+  avatar: "https://github.com/tomvangoethem.png"
+  links:
+    - name: "X/Twitter"
+      url: "https://twitter.com/tomvangoethem"
+gianlu33:
+  name: "gianlu33"
+  bio: "Core member of Stellar Vector. Web security enthusiast and Nim lover."
+  avatar: "https://bobspot.org/assets/img/me.jpg"
+  links:
+    - name: "Website"
+      url: "https://bobspot.org/"

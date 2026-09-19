@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="{{ site.Language.Locale }}">
+<head>
+    {{ partial "head.html" . }}
+</head>
+<body class="antialiased min-h-dvh flex flex-col">
+    <a href="#content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-2000
+              focus:rounded-sm focus:bg-accent focus:px-4 focus:py-2 focus:font-mono
+              focus:text-xs focus:uppercase focus:tracking-[0.2em] focus:text-accent-text
+              focus:no-underline">
+        skip to content
+    </a>
+
+    {{ partial "navbar/header.html" . }}
+
+    <main id="content" tabindex="-1" class="flex-1 w-full">
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    {{ partial "footer.html" . }}
+</body>
+</html>

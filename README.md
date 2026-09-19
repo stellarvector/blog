@@ -1,39 +1,44 @@
 # Stellar Vector Blog
 
-Welcome!
-
-When adding or editing a writeup, please use the instructions below.
+This is the stellar vector blog sourcecode.
+Feel free to contribute by writing a post and submitting a PR.
 
 ## Adding a writeup
 
-When adding a writeup, please use the included `blog.py` script to generate the writeup template.
+1. Add your profile in `data/authors.yml` if you haven't already
+2. Create a new markdown file in `content/writeups/YYYY/SLUGGIFIED_CTF_NAME/challenge.md`.
+    Create the directories if necessary (e.g. first writeup of the year) but make sure the ctf directory does not already exist.
+3. Add the following frontmatter:
 
-Usage:
+```yaml
+---
+title: "Challenge Name"          # Shown verbatim: write it as it should appear
+date: YYYY-MM-DD
+author: "YourName"              # As defined in data/authors.yml
+category: "ChallengeCategory"   # E.g. crypto, web, reversing etc. as defined by the CTF
+tags: ["add", "tags", "here"]   # Tags related to the content
+summary: "A summary of max 200 characters for displaying in the writeup cards on the site, this teases the visitor to read your writeup"
+hasMathNotation: false          # Change to true if you use mathjax's $ or $$
+featured: false                 # An admin will decide on this
+---
+```
 
-1. `python3 blog.py`
-2. choose `1` to add a writer profile (if you haven't done this yet previously)
-3. Enter the information requested in the prompts
-4. choose `2`
-5. Enter the information requested in the prompts
-6. Edit ONLY the file the output points you to and the assets directory for images/attachments
-7. Submit a PR to the repo
-8. We thank you for your contribution!!!
+4. Place any images in `static/assets/images/YYYY/SLUGGIFIED_CTF_NAME/` and reference them as `/assets/images/YYYY/SLUGGIFIED_CTF_NAME/image.png`.
 
-You CAN write a second writeup if there is already one for a specific challenge.
-
-For errors in the script or other parts of the site, submit an issue and possibly a separate pull request.
-**Do not fix issues in writeup-submission PRs!**
-
-## Editing a writeup
-
-When editing a writeup, correct the writeup content (or title) **and add or overwrite the `last_edit_date`**!
-Also add a small changelog message at the end of the writeup explaining what changed on that date.
+Titles are rendered exactly as written — in the card, the `<h1>` and the browser tab — so
+that challenge names such as `GateCrash` keep their casing. Write the title the way you want
+it to read; do not use the file slug.
 
 ## Running locally
 
-It should be as easy as (you might need to use sudo, but ideally use rvm):
+1. Install Hugo (extended version, >= 0.161.0) and Node.js.
+2. Run `npm install` to install the Tailwind CSS toolchain (Hugo shells out to it during the build).
+3. Run `hugo server`.
+4. Go to http://localhost:1313/
 
-1. (`rvm use`)
-2. `bundle install`
-3. `bundle exec jekyll serve`
-4. go to http://127.0.0.1:4000/
+The theme is pulled in as a Hugo module (`github.com/stellarvector/theme`), so Go must be
+installed as well. Run `hugo mod get -u github.com/stellarvector/theme` to update it.
+
+## Building
+
+Run `hugo` to generate the static site in the `public/` directory.

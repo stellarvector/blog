@@ -1,0 +1,146 @@
+{{ define "main" }}
+{{- /* .Parent is the competition, its parent the year; derive from the page
+       tree rather than from .File, which is nil for generated pages. */ -}}
+{{- $ctf := .Parent -}}
+{{- $year := $ctf.Parent -}}
+{{- $crumbs := slice (dict "title" "writeups" "url" (relURL "/writeups/")) -}}
+{{- if $year }}{{ $crumbs = $crumbs | append (dict "title" $year.Title "url" $year.RelPermalink) }}{{ end -}}
+{{- if $ctf }}{{ $crumbs = $crumbs | append (dict "title" $ctf.Title "url" $ctf.RelPermalink) }}{{ end -}}
+{{- $crumbs = $crumbs | append (dict "title" (.Title | lower)) -}}
+
+{{- /* sv-safe-fixed-top, not top-0: under viewport-fit=cover a bar pinned to
+       y=0 renders inside the status-bar strip on a notched phone and is
+       never seen. The header below it pays the same inset. */ -}}
+<div id="reading-progress" class="sv-safe-fixed-top fixed left-0 z-1001 h-0.5 w-0 bg-accent-light"
+     aria-hidden="true"></div>
+
+{{- /* Back to top. Writeups are long and the only other way back up on a
+       phone is a full scroll: the header links away rather than up, and the
+       TOC is off screen by then. Hidden at lg, where the sticky sidebar
+       already offers the whole page. Visibility (not display) is toggled, so
+       it leaves the tab order while hidden and never reflows the page. */ -}}
+<button type="button" id="to-top" class="sv-to-top inline-flex lg:hidden" aria-label="Back to top"
+        data-umami-event="click: back-to-top">
+    {{ partial "icon.html" (dict "name" "arrow-up" "class" "w-5 h-5") }}
+</button>
+
+{{- /* Print furniture. Hidden on screen. In print these three become the
+       header group, row group and footer group of a single table box, which is
+       what makes the browser repeat them on every sheet AND reserve space for
+       them -- position:fixed does the former but never the latter, so it just
+       printed on top of the text. They must stay siblings for that to work.
+       aria-hidden: each only repeats information already in the document. */ -}}
+<div class="sv-print-only sv-print-running-header" aria-hidden="true">
+    <img class="sv-print-logo" src="{{ site.Params.logo_light }}" alt="">
+    <span>blog.stellarvector.be</span>
+</div>
+
+<div class="sv-print-body mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+    {{- /*
+        One grid, so the TOC exists exactly once in the DOM. On mobile it falls
+        between the header and the article; on desktop it moves into its own
+        sticky column. Rendering it twice would duplicate element ids.
+    */}}
+    <div class="grid grid-cols-1 gap-y-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-x-10">
+
+        <header class="min-w-0 lg:col-start-1 lg:row-start-1">
+            {{ partial "breadcrumbs.html" (dict "items" $crumbs) }}
+            <h1 class="mt-3 !mb-0">{{ .Title }}</h1>
+            <div class="sv-label mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 normal-case">
+                {{ with .Params.author }}
+                    {{ $authors := . }}
+                    {{ if not (reflect.IsSlice $authors) }}{{ $authors = slice $authors }}{{ end }}
+                    <span class="flex items-center gap-1.5">
+                        {{ range $authors }}
+                            {{ with index hugo.Data.authors . }}
+                                <img src="{{ .avatar }}" alt="" loading="lazy" width="20" height="20"
+                                     class="h-5 w-5 rounded-full border border-line-strong object-cover">
+                            {{ end }}
+                        {{ end }}
+                        <span>{{ range $i, $a := $authors }}{{ if $i }}, {{ end }}{{ with index hugo.Data.authors $a }}{{ .name }}{{ else }}{{ $a }}{{ end }}{{ end }}</span>
+                    </span>
+                    <span class="text-line-strong" aria-hidden="true">/</span>
+                {{ end }}
+                {{ with .Date }}
+                    <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "Jan 2, 2006" }}</time>
+                    <span class="text-line-strong" aria-hidden="true">/</span>
+                {{ end }}
+                <span>{{ .ReadingTime }} min read</span>
+            </div>
+            {{- /* On screen the tags live at the foot of the article; on paper
+                   the context belongs up front, beside the byline. */ -}}
+            <dl class="sv-print-only sv-print-meta" aria-hidden="true">
+                {{ with .Params.category }}
+                    <dt>Category</dt>
+                    <dd>{{ . | lower }}</dd>
+                {{ end }}
+                {{ with .Params.tags }}
+                    <dt>Tags</dt>
+                    <dd>{{ delimit (apply . "lower" ".") ", " }}</dd>
+                {{ end }}
+                <dt>Source</dt>
+                <dd>{{ .Permalink }}</dd>
+            </dl>
+        </header>
+
+        <aside class="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-28 lg:self-start">
+            <div class="flex gap-2">
+                {{ partial "article-actions.html" . }}
+            </div>
+            <div class="mt-4">
+                {{ partial "toc.html" . }}
+            </div>
+        </aside>
+
+        <article class="min-w-0 lg:col-start-1 lg:row-start-2" data-pagefind-body>
+            {{- /* max-w-none keeps code blocks, tables and images full width;
+                   custom.css caps the text-bearing blocks at 70ch so the
+                   measure stays readable on a wide screen. */ -}}
+            <div class="prose prose-lg sv-measure max-w-none min-w-0">
+                {{ .Content }}
+            </div>
+
+            {{ if or .Params.category .Params.tags }}
+                <div class="mt-10 flex flex-wrap gap-2 border-t border-line pt-6">
+                    {{ with .Params.category }}{{ partial "category-pill.html" (dict "name" . "context" $) }}{{ end }}
+                    {{ range .Params.tags }}{{ partial "tag-pill.html" (dict "name" . "context" $) }}{{ end }}
+                </div>
+            {{ end }}
+
+            {{ with .Params.author }}
+                {{ $authors := . }}
+                {{ if not (reflect.IsSlice $authors) }}{{ $authors = slice $authors }}{{ end }}
+                <footer class="mt-10 border-t border-line pt-6">
+                    <h2 class="sv-section-title sv-prompt !mt-0 !mb-3">
+                        about the {{ if gt (len $authors) 1 }}authors{{ else }}author{{ end }}
+                    </h2>
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        {{ range $authors }}
+                            {{ with index hugo.Data.authors . }}{{ partial "author-card.html" . }}{{ end }}
+                        {{ end }}
+                    </div>
+                </footer>
+            {{ end }}
+        </article>
+    </div>
+
+    {{- /* Related posts sit after the article at every size: on desktop the
+           sidebar is reserved for the TOC, which stays useful while reading. */}}
+    {{ with .Parent }}
+        {{ $related := where (where .RegularPages "Permalink" "ne" $.Permalink) "Params.category" "==" $.Params.category }}
+        {{ if not $related }}{{ $related = where .RegularPages "Permalink" "ne" $.Permalink }}{{ end }}
+        {{ with $related }}
+            <section class="mt-12 border-t border-line-strong pt-8">
+                <h2 class="sv-section-title sv-prompt !mt-0 !mb-4">more like this</h2>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {{ range first 3 . }}
+                        {{ partial "article-card.html" (dict "Page" . "compact" true) }}
+                    {{ end }}
+                </div>
+            </section>
+        {{ end }}
+    {{ end }}
+</div>
+
+<div class="sv-print-only sv-print-running-footer" aria-hidden="true">{{ .Permalink }}</div>
+{{ end }}

@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- $writeups := where site.RegularPages "Section" "writeups" -}}
+{{- $featured := where $writeups "Params.featured" true -}}
+{{- $recent := first 6 $writeups.ByDate.Reverse -}}
+
+<section class="relative overflow-hidden border-b border-line-strong">
+    {{- /* Decorative coordinate grid, faded at the edges. Never interactive. */}}
+    <div class="sv-grid sv-grid-fade pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+
+    <div class="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <p class="sv-label sv-prompt normal-case">cat /etc/stellarvector/blog</p>
+
+        <h1 class="sv-glitch mt-3 !mb-0" data-text="{{ site.Title }}">{{ site.Title }}</h1>
+
+        <p class="mt-4 max-w-2xl text-base text-muted text-pretty sm:text-lg">
+            Official walkthroughs and strategies from our latest Capture The Flag
+            competitions.<span class="sv-caret" aria-hidden="true"></span>
+        </p>
+
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+            <span class="sv-label normal-case">read about</span>
+            {{ range first 5 site.Taxonomies.category.ByCount }}
+                {{ partial "category-pill.html" (dict "name" .Page.Title) }}
+            {{ end }}
+        </div>
+
+        <div class="mt-8">
+            <a href="{{ relURL "/writeups/" }}"
+               {{- /* text-accent-text! is important on purpose: the theme's
+                      `:is(a,.prose :where(a)):hover` rule is specificity (0,2,0) and
+                      would otherwise repaint this label --color-link-hover on hover,
+                      which in light mode is the exact same #821010 as the hover
+                      background. Same fix as the solid variant in the main site's
+                      partials/button.html. */ -}}
+               class="inline-flex min-h-12 items-center gap-2 rounded-sm border border-accent bg-accent
+                      px-5 py-3 font-mono text-xs font-bold uppercase tracking-widest text-accent-text!
+                      no-underline transition-colors duration-200 hover:bg-accent-dark hover:no-underline"
+               data-umami-event="click: hero-all-writeups">
+                browse all writeups
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+    {{ with $featured }}
+        <section>
+            <h2 class="sv-section-title sv-prompt !mt-0 !mb-4">featured</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+                {{ range first 2 . }}{{ partial "article-card.html" . }}{{ end }}
+            </div>
+        </section>
+    {{ end }}
+
+    <section class="{{ if $featured }}mt-12{{ end }}">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 class="sv-section-title sv-prompt !mt-0 !mb-0">recent</h2>
+            <a href="{{ relURL "/writeups/" }}" class="font-mono text-xs uppercase tracking-widest"
+               data-umami-event="click: recent-all-writeups">see all &rarr;</a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {{ range $recent }}{{ partial "article-card.html" (dict "Page" . "compact" true) }}{{ end }}
+        </div>
+    </section>
+</div>
+{{ end }}

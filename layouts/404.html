@@ -1,0 +1,27 @@
+{{ define "main" }}
+<div class="relative mx-auto flex w-full max-w-3xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
+    <div class="sv-grid sv-grid-fade pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+
+    <div class="relative w-full">
+        <p class="sv-label normal-case">HTTP 404</p>
+
+        <h1 class="sv-glitch !mt-2 !mb-0 font-mono !text-6xl sm:!text-8xl" data-text="404">404</h1>
+
+        <p class="mt-6 text-lg text-body">No such file or directory.</p>
+        <p class="mt-2 text-muted text-pretty">
+            The page you asked for is not on this host. It may have moved, or never existed.
+        </p>
+
+        <div class="sv-terminal mx-auto mt-8 max-w-md text-left" data-title="recovery">
+            <p>
+                <span class="text-terminal" aria-hidden="true">$&nbsp;</span>cd
+                <a href="{{ relURL "/" }}">/</a>
+            </p>
+            <p>
+                <span class="text-terminal" aria-hidden="true">$&nbsp;</span>ls
+                <a href="{{ relURL "/writeups/" }}">/writeups</a>
+            </p>
+        </div>
+    </div>
+</div>
+{{ end }}

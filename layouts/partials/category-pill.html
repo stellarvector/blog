@@ -1,0 +1,21 @@
+{{- /* Category chip. `static` renders a non-interactive span, for use inside a
+       card that already has its own stretched link. */ -}}
+{{- $name := "" }}{{ $class := "" }}{{ $static := false }}{{ $context := . -}}
+{{- if reflect.IsMap . -}}
+    {{- $name = .name }}{{ $class = .class | default "" }}{{ $static = .static | default false }}{{ $context = .context -}}
+{{- else -}}
+    {{- $name = . -}}
+{{- end -}}
+
+{{- with site.GetPage (printf "category/%s" ($name | urlize)) -}}
+    {{- $active := and $context (eq $context.Page .) -}}
+    {{- if $static -}}
+        <span class="sv-tag {{ $class }}">{{ .Title | lower }}</span>
+    {{- else -}}
+        <a href="{{ .RelPermalink }}"
+           class="sv-tag no-underline hover:no-underline transition-colors duration-200
+                  hover:border-accent hover:text-link {{ if $active }}sv-tag-accent{{ end }} {{ $class }}"
+           {{ if $active }}aria-current="page"{{ end }}
+           data-umami-event="click: category-{{ .Title | anchorize }}">{{ .Title | lower }}</a>
+    {{- end -}}
+{{- end -}}

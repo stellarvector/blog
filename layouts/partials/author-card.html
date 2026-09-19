@@ -1,0 +1,23 @@
+<div class="flex min-w-0 gap-3 rounded-md border border-line bg-card p-4">
+    {{ if .avatar }}
+        <img src="{{ .avatar }}" alt="" loading="lazy" width="48" height="48"
+             class="h-12 w-12 shrink-0 rounded-sm border border-line-strong object-cover">
+    {{ else }}
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border
+                    border-line-strong bg-surface font-mono text-lg text-accent-light" aria-hidden="true">
+            {{ substr .name 0 1 | upper }}
+        </div>
+    {{ end }}
+    <div class="min-w-0 flex-1">
+        <div class="font-mono text-sm font-bold text-heading">{{ .name }}</div>
+        {{ with .bio }}<p class="mt-1 text-sm leading-relaxed text-muted text-pretty">{{ . }}</p>{{ end }}
+        {{ with .links }}
+            <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                {{ range . }}
+                    <a href="{{ .url }}" class="font-mono text-xs text-link hover:text-link-hover"
+                       rel="noopener" data-umami-event="click: author-link">{{ .name }}&nbsp;&nearr;</a>
+                {{ end }}
+            </div>
+        {{ end }}
+    </div>
+</div>

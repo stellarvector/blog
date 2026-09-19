@@ -1,0 +1,88 @@
+baseURL: "https://blog.stellarvector.be/"
+canonifyURLs: true
+locale: "en-us"
+title: "Stellar Vector Blog"
+theme: github.com/stellarvector/theme
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+taxonomies:
+  category: category
+  tag: tags
+
+disableKinds:
+  - taxonomy
+
+build:
+  buildStats:
+    enable: true
+
+params:
+  description: "Stellar Vector Blog"
+  # Mirrors --color-page in the theme module. Used for <meta name="theme-color">
+  # and handed to the theme scripts, so the value lives in exactly one place.
+  theme_color_dark: "#0a0505"
+  theme_color_light: "#fff9f9"
+  logo_dark: "https://www.stellarvector.be/assets/logo/logo-dark.png"
+  logo_light: "https://www.stellarvector.be/assets/logo/logo-light.png"
+  external_links:
+    - title: "Stellar Vector"
+      url: https://stellarvector.be
+
+menu:
+  main:
+    - name: "Writeups"
+      url: "/writeups"
+      weight: 1
+
+permalinks:
+  category: "/writeups/category/:slug/"
+  tags: "/writeups/tag/:slug/"
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+    tableOfContents:
+      startLevel: 2
+      endLevel: 3
+      ordered: false
+  highlight:
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    lineNumbersInTable: false
+    # Emit CSS classes instead of inline styles, so the palette can follow
+    # light/dark mode. Both palettes live in assets/css/chroma.css.
+    noClasses: false
+
+minify:
+  disableHTML: false
+  disableJS: false
+  disableCSS: false
+  minifyOutput: true
+  tdewolff:
+    html:
+      keepSpecialComments: true
+      keepDefaultMethodOnForm: false
+      keepDocumentTags: true
+      keepEndTags: true
+      keepQuotes: true
+
+module:
+  imports:
+  - path: github.com/stellarvector/theme
+security:
+  exec:
+    allow:
+      - '^(dart-)?sass$'
+      - '^go$'
+      - '^git$'
+      - '^node$'
+      - '^npx$'
+      - '^postcss$'
+      - '^tailwindcss$'
