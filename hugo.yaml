@@ -40,9 +40,6 @@ menu:
     - name: "writeups"
       url: "/writeups"
       weight: 2
-    - name: "website"
-      url: "https://stellarvector.be/?utm_source=blog.stellarvector.be&utm_content=navbar"
-      weight: 3
     - name: "find us online"
       url: "https://find.stellarvector.be/?utm_source=blog.stellarvector.be&utm_content=navbar"
       weight: 4
