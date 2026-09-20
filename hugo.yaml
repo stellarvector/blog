@@ -2,7 +2,6 @@ baseURL: "https://blog.stellarvector.be/"
 canonifyURLs: true
 locale: "en-us"
 title: "Stellar Vector Blog"
-theme: github.com/stellarvector/theme
 
 outputs:
   home:
