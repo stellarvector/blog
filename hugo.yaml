@@ -22,21 +22,27 @@ build:
 
 params:
   description: "Stellar Vector Blog"
-  # Mirrors --color-page in the theme module. Used for <meta name="theme-color">
-  # and handed to the theme scripts, so the value lives in exactly one place.
-  theme_color_dark: "#0a0505"
-  theme_color_light: "#fff9f9"
-  logo_dark: "https://www.stellarvector.be/assets/logo/logo-dark.png"
-  logo_light: "https://www.stellarvector.be/assets/logo/logo-light.png"
-  external_links:
-    - title: "Stellar Vector"
-      url: https://stellarvector.be
+  host: "blog"
+  measure: "6xl"
+  analytics:
+    website_id: "00864579-6b3e-432d-bd6a-a402b6bb1f44"
+    domains: "blog.stellarvector.be"
+  css:
+    extra: ["css/chroma.css", "css/custom.css"]
+  js:
+    extra: ["js/main.js", "js/search.js"]
 
 menu:
   main:
-    - name: "Writeups"
-      url: "/writeups"
+    - name: "home"
+      url: "/"
       weight: 1
+    - name: "writeups"
+      url: "/writeups"
+      weight: 2
+    - name: "find us online"
+      url: "https://find.stellarvector.be/?utm_source=blog.stellarvector.be&utm_content=navbar"
+      weight: 3
 
 permalinks:
   category: "/writeups/category/:slug/"

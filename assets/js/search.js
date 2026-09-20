@@ -1,10 +1,5 @@
 /*
  * Client-side search over /index.json.
- *
- * The corpus is small (one JSON document covering every writeup), so this is a
- * plain substring scan rather than a search library. The index is fetched
- * lazily on first open, so it never competes with the article itself for
- * bandwidth on a phone.
  */
 (function () {
     'use strict';
@@ -15,6 +10,7 @@
     var input = document.getElementById('search-input');
     var list = document.getElementById('search-results');
     var status = document.getElementById('search-status');
+    var template = document.getElementById('search-result-template');
 
     var index = null;
     var loading = null;
@@ -24,7 +20,7 @@
     function load() {
         if (loading) return loading;
 
-        loading = fetch((window.SV && window.SV.searchIndex) || '/index.json')
+        loading = fetch(document.documentElement.dataset.searchIndex || '/index.json')
             .then(function (r) { return r.json(); })
             .then(function (data) { index = data; })
             .catch(function () {
@@ -35,28 +31,37 @@
         return loading;
     }
 
-    function escapeHTML(s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
-    }
-
     /*
-     * Highlight the matched run. The slice is computed on the RAW text and each
-     * piece escaped afterwards -- escaping first and then slicing by the raw
-     * query's length shifts every index past an entity ("&" becomes "&amp;")
-     * and can cut one in half.
+     * Highlight the matched run without using innerHTML.
+     * Appends alternating text nodes and <mark> elements.
      */
-    function mark(text, query) {
-        var at = text.toLowerCase().indexOf(query.toLowerCase());
-        if (at < 0) return escapeHTML(text);
+    function appendHighlightedText(el, text, query) {
+        el.replaceChildren();
+        if (!query) {
+            el.appendChild(document.createTextNode(text));
+            return;
+        }
 
-        return escapeHTML(text.slice(0, at)) +
-               '<mark>' + escapeHTML(text.slice(at, at + query.length)) + '</mark>' +
-               escapeHTML(text.slice(at + query.length));
+        var lowerText = text.toLowerCase();
+        var lowerQuery = query.toLowerCase();
+        var start = 0;
+        var at;
+
+        while ((at = lowerText.indexOf(lowerQuery, start)) > -1) {
+            if (at > start) {
+                el.appendChild(document.createTextNode(text.slice(start, at)));
+            }
+            var m = document.createElement('mark');
+            m.textContent = text.slice(at, at + query.length);
+            el.appendChild(m);
+            start = at + query.length;
+        }
+
+        if (start < text.length) {
+            el.appendChild(document.createTextNode(text.slice(start)));
+        }
     }
 
-    /* A short window of body text around the first match, for context. */
     function snippet(text, query) {
         var at = text.toLowerCase().indexOf(query.toLowerCase());
         if (at < 0) return text.slice(0, 120);
@@ -82,7 +87,7 @@
     }
 
     function render(query) {
-        list.innerHTML = '';
+        list.replaceChildren();
         active = -1;
         input.removeAttribute('aria-activedescendant');
 
@@ -117,23 +122,21 @@
         status.textContent = hits.length + ' match' + (hits.length === 1 ? '' : 'es') +
                              ' — ↑↓ to navigate, ↵ to open';
 
-        list.innerHTML = hits.map(function (hit, n) {
-            return '<a class="sv-result" role="option" aria-selected="false" ' +
-                       'id="search-hit-' + n + '" href="' + escapeHTML(hit.permalink) + '" ' +
-                       'data-umami-event="click: search-result">' +
-                       '<span class="block font-mono text-sm text-heading">' +
-                           '<span class="text-accent-light" aria-hidden="true">&gt; </span>' +
-                           mark(hit.title, query) +
-                       '</span>' +
-                       '<span class="sv-label mt-1 block normal-case">' +
-                           (hit.category ? escapeHTML(hit.category) + ' / ' : '') +
-                           escapeHTML(hit.formattedDate || '') +
-                       '</span>' +
-                       '<span class="mt-1 block text-xs leading-relaxed text-muted">' +
-                           mark(snippet(hit.content || '', query), query) +
-                       '</span>' +
-                   '</a>';
-        }).join('');
+        hits.forEach(function (hit, n) {
+            var clone = template.content.cloneNode(true);
+            var item = clone.querySelector('.sv-result');
+            item.id = 'search-hit-' + n;
+            item.href = hit.permalink;
+
+            appendHighlightedText(clone.querySelector('.search-result-title'), hit.title, query);
+
+            var meta = clone.querySelector('.search-result-meta');
+            meta.textContent = (hit.category ? hit.category + ' / ' : '') + (hit.formattedDate || '');
+
+            appendHighlightedText(clone.querySelector('.search-result-snippet'), snippet(hit.content || '', query), query);
+
+            list.appendChild(clone);
+        });
     }
 
     function open() {
@@ -150,7 +153,6 @@
         btn.addEventListener('click', function () { dialog.close(); });
     });
 
-    /* Clicking the backdrop closes; clicking the panel must not. */
     dialog.addEventListener('click', function (e) {
         if (e.target === dialog) dialog.close();
     });
@@ -174,15 +176,11 @@
         }
     });
 
-    /* "/" and Ctrl/Cmd-K open search, but never while the user is typing. */
     document.addEventListener('keydown', function (e) {
         if (dialog.open) return;
-
         var el = document.activeElement;
         var typing = el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
-
         if (!e.key) return;
-
         if ((e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) ||
             (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey))) {
             e.preventDefault();

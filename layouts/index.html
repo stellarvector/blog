@@ -10,7 +10,7 @@
     <div class="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <p class="sv-label sv-prompt normal-case">cat /etc/stellarvector/blog</p>
 
-        <h1 class="sv-glitch mt-3 !mb-0" data-text="{{ site.Title }}">{{ site.Title }}</h1>
+        <h1 class="sv-glitch sv-glitch-auto mt-3 !mb-0" data-text="{{ site.Title }}">{{ site.Title }}</h1>
 
         <p class="mt-4 max-w-2xl text-base text-muted text-pretty sm:text-lg">
             Official walkthroughs and strategies from our latest Capture The Flag
@@ -25,19 +25,7 @@
         </div>
 
         <div class="mt-8">
-            <a href="{{ relURL "/writeups/" }}"
-               {{- /* text-accent-text! is important on purpose: the theme's
-                      `:is(a,.prose :where(a)):hover` rule is specificity (0,2,0) and
-                      would otherwise repaint this label --color-link-hover on hover,
-                      which in light mode is the exact same #821010 as the hover
-                      background. Same fix as the solid variant in the main site's
-                      partials/button.html. */ -}}
-               class="inline-flex min-h-12 items-center gap-2 rounded-sm border border-accent bg-accent
-                      px-5 py-3 font-mono text-xs font-bold uppercase tracking-widest text-accent-text!
-                      no-underline transition-colors duration-200 hover:bg-accent-dark hover:no-underline"
-               data-umami-event="click: hero-all-writeups">
-                browse all writeups
-            </a>
+            {{ partial "sv/button" (dict "text" "browse all writeups" "url" (relURL "/writeups/") "variant" "solid" "data" (dict "umami-event" "click: hero-all-writeups")) }}
         </div>
     </div>
 </section>

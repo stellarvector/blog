@@ -18,7 +18,7 @@
                 class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-sm text-muted
                        cursor-pointer transition-colors duration-200 hover:text-link"
                 aria-label="Close search">
-            {{ partial "icon.html" (dict "name" "close" "class" "w-5 h-5") }}
+            {{ partial "sv/icon" (dict "name" "close" "class" "w-5 h-5") }}
         </button>
     </div>
 
@@ -30,4 +30,15 @@
 
     <p id="search-status" role="status" aria-live="polite"
        class="sv-label border-t border-line px-4 py-2 normal-case"></p>
+
+    <template id="search-result-template">
+        <a class="sv-result" role="option" aria-selected="false">
+            <span class="block font-mono text-sm text-heading">
+                <span class="text-accent-light" aria-hidden="true">&gt; </span>
+                <span class="search-result-title"></span>
+            </span>
+            <span class="search-result-meta sv-label mt-1 block normal-case"></span>
+            <span class="search-result-snippet mt-1 block text-xs leading-relaxed text-muted"></span>
+        </a>
+    </template>
 </dialog>

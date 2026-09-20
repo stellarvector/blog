@@ -1,8 +1,0 @@
-{{- /* Logo is a background image on a sized box so the two theme variants can
-       swap without either one ever reflowing the header. */ -}}
-{{- $mark := "block bg-contain bg-no-repeat bg-center w-[84px] h-9 md:w-[110px] md:h-12 transition-transform duration-300 group-hover:scale-105" -}}
-<a href="{{ "/" | relURL }}" class="group shrink-0 flex min-h-11 items-center no-underline hover:no-underline"
-   aria-label="{{ site.Title }} home" data-umami-event="click: logo-home">
-    <span class="{{ $mark }} light:hidden" style="background-image:url('{{ site.Params.logo_dark }}')"></span>
-    <span class="{{ $mark }} hidden light:block" style="background-image:url('{{ site.Params.logo_light }}')"></span>
-</a>

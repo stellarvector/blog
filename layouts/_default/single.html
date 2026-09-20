@@ -8,22 +8,6 @@
 {{- if $ctf }}{{ $crumbs = $crumbs | append (dict "title" $ctf.Title "url" $ctf.RelPermalink) }}{{ end -}}
 {{- $crumbs = $crumbs | append (dict "title" (.Title | lower)) -}}
 
-{{- /* sv-safe-fixed-top, not top-0: under viewport-fit=cover a bar pinned to
-       y=0 renders inside the status-bar strip on a notched phone and is
-       never seen. The header below it pays the same inset. */ -}}
-<div id="reading-progress" class="sv-safe-fixed-top fixed left-0 z-1001 h-0.5 w-0 bg-accent-light"
-     aria-hidden="true"></div>
-
-{{- /* Back to top. Writeups are long and the only other way back up on a
-       phone is a full scroll: the header links away rather than up, and the
-       TOC is off screen by then. Hidden at lg, where the sticky sidebar
-       already offers the whole page. Visibility (not display) is toggled, so
-       it leaves the tab order while hidden and never reflows the page. */ -}}
-<button type="button" id="to-top" class="sv-to-top inline-flex lg:hidden" aria-label="Back to top"
-        data-umami-event="click: back-to-top">
-    {{ partial "icon.html" (dict "name" "arrow-up" "class" "w-5 h-5") }}
-</button>
-
 {{- /* Print furniture. Hidden on screen. In print these three become the
        header group, row group and footer group of a single table box, which is
        what makes the browser repeat them on every sheet AND reserve space for
@@ -31,7 +15,7 @@
        printed on top of the text. They must stay siblings for that to work.
        aria-hidden: each only repeats information already in the document. */ -}}
 <div class="sv-print-only sv-print-running-header" aria-hidden="true">
-    <img class="sv-print-logo" src="{{ site.Params.logo_light }}" alt="">
+    <img class="sv-print-logo" src="{{ site.Params.logo.light | relURL }}" alt="">
     <span>blog.stellarvector.be</span>
 </div>
 
@@ -44,7 +28,7 @@
     <div class="grid grid-cols-1 gap-y-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-x-10">
 
         <header class="min-w-0 lg:col-start-1 lg:row-start-1">
-            {{ partial "breadcrumbs.html" (dict "items" $crumbs) }}
+            {{ partial "sv/breadcrumbs" (dict "items" $crumbs) }}
             <h1 class="mt-3 !mb-0">{{ .Title }}</h1>
             <div class="sv-label mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 normal-case">
                 {{ with .Params.author }}

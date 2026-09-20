@@ -1,23 +1,75 @@
+{{- define "head" -}}
+    {{- if .Params.hasMathNotation -}}
+        <script defer src="{{ (resources.Get "js/mathjax.js" | resources.Minify | fingerprint).RelPermalink }}"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" crossorigin="anonymous"></script>
+    {{- end -}}
+{{- end -}}
+
+{{- define "body-end" -}}
+    {{ partial "search-dialog.html" . }}
+
+    <template id="lightbox-template">
+        <dialog class="sv-lightbox max-w-[95vw] max-h-[95vh] bg-transparent p-0 backdrop:bg-black/85 backdrop:backdrop-blur-sm"
+                aria-label="Enlarged image">
+            <img alt="" class="max-h-[85vh] max-w-full object-contain">
+            <button type="button" data-lightbox-close aria-label="Close image"
+                    class="mt-3 mx-auto flex h-11 w-11 items-center justify-center rounded-sm border border-line-strong bg-card text-body cursor-pointer">&times;</button>
+        </dialog>
+    </template>
+
+    <div id="reading-progress" class="sv-safe-fixed-top fixed left-0 z-[1001] h-0.5 w-0 bg-accent-light"
+         aria-hidden="true"></div>
+    <button type="button" id="to-top" class="sv-to-top inline-flex lg:hidden" aria-label="Back to top"
+            data-umami-event="click: back-to-top">
+        {{ partial "sv/icon" (dict "name" "arrow-up" "class" "w-5 h-5") }}
+    </button>
+{{- end -}}
+
 <!doctype html>
-<html lang="{{ site.Language.Locale }}">
+<html lang="{{ site.Language.Locale }}"
+      data-theme-light="{{ site.Params.theme_color_light }}"
+      data-theme-dark="{{ site.Params.theme_color_dark }}"
+      data-search-index="{{ "index.json" | relURL }}">
 <head>
-    {{ partial "head.html" . }}
+    {{ partial "sv/head/meta" . }}
+    {{ partial "sv/head/js" . }}
+    {{ partial "sv/head/fonts" . }}
+    {{ partial "sv/head/css" . }}
+    {{ partial "sv/head/analytics" . }}
+    {{ block "head" . }}{{ end }}
 </head>
 <body class="antialiased min-h-dvh flex flex-col">
-    <a href="#content"
-       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-2000
-              focus:rounded-sm focus:bg-accent focus:px-4 focus:py-2 focus:font-mono
-              focus:text-xs focus:uppercase focus:tracking-[0.2em] focus:text-accent-text
-              focus:no-underline">
-        skip to content
-    </a>
-
-    {{ partial "navbar/header.html" . }}
-
+    {{ partial "sv/skip-link" . }}
+    {{ block "header" . }}{{ partial "sv/header" . }}{{ end }}
     <main id="content" tabindex="-1" class="flex-1 w-full">
         {{ block "main" . }}{{ end }}
     </main>
+    
+    {{ block "footer" . }}
+    <footer class="sv-safe-bottom mt-auto border-t border-line-strong bg-card print:hidden">
+        <div class="mx-auto w-full max-w-6xl px-4 py-10 text-center sm:px-6">
+            <p class="sv-label">powered by</p>
+            <p class="mt-2 text-sm text-muted text-pretty">
+                <a href="https://stellarvector.be/?utm_source=blog.stellarvector.be&amp;utm_content=footer"
+                   data-umami-event="click: footer-to-site">Stellar Vector</a>
+                is powered by the
+                <a href="https://distrinet.cs.kuleuven.be" data-umami-event="click: footer-distrinet">DistriNet research group</a>
+                and the
+                <a href="https://www.kuleuven.be" data-umami-event="click: footer-kuleuven">KU Leuven</a>.
+            </p>
+            <p class="mt-3 font-mono text-xs text-muted">
+                &copy; {{ now.Format "2006" }} Stellar Vector &amp; Authors.
+            </p>
+            <p class="mx-auto mt-4 max-w-3xl text-xs leading-relaxed text-muted text-pretty">
+                All contents are protected under copyright of the respective authors. The views expressed
+                are those of the individual authors and do not necessarily reflect the official position of
+                Stellar Vector. Technical writeups are provided for educational and ethical research
+                purposes only; any action you take upon this information is strictly at your own risk.
+            </p>
+        </div>
+    </footer>
+    {{ end }}
 
-    {{ partial "footer.html" . }}
+    {{ block "body-end" . }}{{ end }}
 </body>
 </html>

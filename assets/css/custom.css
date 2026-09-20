@@ -8,43 +8,11 @@
  * mobile/print affordances.
  */
 
-@custom-variant light (&:where(.light, .light *));
-
 @layer base {
     /* Print-only furniture. Revealed by the @media print block at the bottom. */
     .sv-print-only {
         display: none;
     }
-
-    /*
-     * No 300ms tap delay and no grey tap flash.
-     *
-     * overscroll-behavior-y is deliberately NOT set here: on the root element
-     * it also cancels pull-to-refresh, which is a gesture readers expect on a
-     * content site. The two panels that actually needed chaining protection
-     * (#menu-panel, #search-results) carry overscroll-contain themselves.
-     */
-    html {
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    a, button, summary {
-        touch-action: manipulation;
-    }
-
-    /* viewport-fit=cover lets the page reach under notches, so the gutters
-       have to be paid back here or content sits under the rounded corners. */
-    body {
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-    }
-
-    /* Long tokens in CTF writeups (hashes, base64, flags) must not force the
-       whole page to scroll sideways on a 375px screen. */
-    .prose :where(p, li, td, th) {
-        overflow-wrap: break-word;
-    }
-
 }
 
 /*
@@ -71,28 +39,6 @@
         overflow-y: hidden;
         /* Room for the scrollbar so it never sits on top of the equation. */
         padding-bottom: 0.25rem;
-    }
-
-    /*
-     * Section heading inside a page ("featured", "recent", "on this page").
-     * These are signposts between blocks of content, so they carry the green
-     * shell prompt from .sv-prompt and sit a step above the metadata labels
-     * they used to share .sv-label with -- at 12px muted they were not
-     * readable. Margins stay out of it: the h2 callers set their own with
-     * important utilities, and the <summary> callers want none.
-     */
-    .sv-section-title {
-        @apply font-mono text-sm font-bold uppercase tracking-[0.15em] text-heading sm:text-base;
-        line-height: 1.4;
-    }
-
-    /* Sticky chrome has to clear the status bar under viewport-fit=cover. */
-    .sv-safe-top {
-        padding-top: env(safe-area-inset-top);
-    }
-
-    .sv-safe-bottom {
-        padding-bottom: env(safe-area-inset-bottom);
     }
 
     /*
@@ -300,12 +246,6 @@
      * Back-to-top. Visibility rather than display, so it is out of the tab
      * order while hidden and switching states never reflows anything.
      */
-    /*
-     * `display` is deliberately NOT set here: it is a utility on the element
-     * (inline-flex lg:hidden) so Tailwind's own ordering decides the contest.
-     * Declared in this block it would sit after .lg\:hidden in the same layer
-     * at equal specificity and win, putting the button on desktop too.
-     */
     .sv-to-top {
         @apply fixed z-1000 h-12 w-12 cursor-pointer items-center justify-center
                rounded-full border border-line-strong bg-card text-body shadow-lg
@@ -328,67 +268,14 @@
     .sv-tag-static {
         @apply border-transparent bg-surface text-muted;
     }
-
-    /* The grid backdrop is atmosphere, not content: fade it out at the edges. */
-    .sv-grid-fade {
-        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 78%);
-        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 0%, transparent 78%);
-    }
 }
 
 /*
  * Print. Writeups get printed and handed around at CTF events, so a printout
  * has to stand on its own: the Stellar Vector mark and the source URL repeat on
  * every sheet, and page one opens with title, byline, date and tags.
- *
- * The repeating header/footer are CSS table groups, not position:fixed. A fixed
- * box does repeat per page in some browsers but reserves NO space in the flow,
- * so it prints straight over the text no matter where it is offset to. A
- * table-header-group/table-footer-group is part of the table box: the browser
- * repeats it and leaves room for it. That is why <main> becomes a table here
- * and the three blocks must be siblings.
  */
 @media print {
-    @page {
-        margin: 12mm;
-    }
-
-    /*
-     * Force the light palette regardless of the reader's theme. Every colour in
-     * the theme and in chroma.css is a light-dark() pair, so flipping
-     * color-scheme is all that is needed -- including syntax tokens, which
-     * would otherwise print near-white on white.
-     */
-    :root {
-        color-scheme: light !important;
-    }
-
-    body {
-        background: #fff !important;
-        color: #000 !important;
-    }
-
-    /*
-     * Site chrome only. Scoped to direct children of <body> on purpose: an
-     * unscoped `header`/`footer` also matches the writeup's own <header>
-     * (title, author, date) and its author footer, which are exactly the
-     * context a printout needs.
-     */
-    body > header,
-    body > footer,
-    aside,
-    dialog,
-    #reading-progress,
-    #to-top,
-    .sv-toc,
-    .sv-anchor,
-    [data-print],
-    [data-share],
-    [data-theme-toggle],
-    [data-search-open] {
-        display: none !important;
-    }
-
     /* Reveal the print-only furniture; the table groups below re-specify the
        two that must not be plain blocks. */
     .sv-print-only {
@@ -471,30 +358,6 @@
     main .grid {
         display: block !important;
     }
-
-    .prose {
-        max-width: none !important;
-    }
-
-    .prose a::after {
-        content: " (" attr(href) ")";
-        font-size: 0.8em;
-        word-break: break-all;
-    }
-
-    .prose pre,
-    .prose .highlight {
-        border: 1px solid #999 !important;
-        white-space: pre-wrap;
-        break-inside: avoid;
-    }
-
-    .prose img {
-        max-width: 100% !important;
-        break-inside: avoid;
-    }
-
-    h1, h2, h3 { break-after: avoid; }
 
     .sv-print-meta, .sv-tag { break-inside: avoid; }
 }
