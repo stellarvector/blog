@@ -2,6 +2,4 @@ module github.com/stellarvector/blog
 
 go 1.26.3
 
-require github.com/stellarvector/theme v1.0.3
-
-replace github.com/stellarvector/theme => ../theme
+require github.com/stellarvector/theme v1.0.4 // indirect
