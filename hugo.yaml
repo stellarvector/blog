@@ -1,5 +1,4 @@
 baseURL: "https://blog.stellarvector.be/"
-canonifyURLs: true
 locale: "en-us"
 title: "Stellar Vector Blog"
 
@@ -19,6 +18,7 @@ disableKinds:
 build:
   buildStats:
     enable: true
+  writeStats: true
 
 params:
   description: "Stellar Vector Blog"
