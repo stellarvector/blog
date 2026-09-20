@@ -3,20 +3,21 @@
     Shadows theme/layouts/partials/sv/header-actions.html
 */ -}}
 {{- /* Desktop: a field-shaped button */ -}}
-{{ partial "sv/button" (dict
-    "variant" "outline"
-    "class" "hidden lg:flex w-56 !justify-start !text-muted hover:!text-body hover:!border-accent"
-    "icon" "search"
-    "html" `search&hellip;<span class="flex-1"></span><kbd class="rounded-xs border border-line-strong px-1.5 py-0.5 text-[0.65rem]">/</kbd>`
-    "data" (dict "search-open" "")
-    "aria_label" "Search writeups"
-) }}
+<button type="button" data-search-open
+        class="hidden lg:flex h-11 w-56 items-center gap-2 rounded-sm border border-line-strong
+               bg-card px-3 font-mono text-xs text-muted cursor-pointer
+               transition-colors duration-200 hover:border-accent hover:text-body"
+        aria-label="Search writeups">
+    {{ partial "sv/icon" (dict "name" "search" "class" "w-4 h-4 shrink-0") }}
+    <span class="flex-1 text-left">search&hellip;</span>
+    <kbd class="rounded-xs border border-line-strong px-1.5 py-0.5 text-[0.65rem]">/</kbd>
+</button>
 
 {{- /* Below lg the same dialog opens from an icon button. */ -}}
-{{ partial "sv/button" (dict
-    "variant" "outline"
-    "class" "lg:hidden !px-0 w-11"
-    "icon" "search"
-    "data" (dict "search-open" "")
-    "aria_label" "Search writeups"
-) }}
+<button type="button" data-search-open
+        class="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-sm border
+               border-line-strong bg-card text-muted cursor-pointer transition-colors
+               duration-200 hover:border-accent hover:text-link"
+        aria-label="Search writeups">
+    {{ partial "sv/icon" (dict "name" "search" "class" "w-5 h-5") }}
+</button>
