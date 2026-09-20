@@ -78,7 +78,7 @@ minify:
 
 module:
   imports:
-  - path: github.com/stellarvector/theme
+    - path: "github.com/stellarvector/theme"
   mounts:
     - source: assets
       target: assets

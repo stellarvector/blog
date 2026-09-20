@@ -3,32 +3,15 @@
 {{- $featured := where $writeups "Params.featured" true -}}
 {{- $recent := first 6 $writeups.ByDate.Reverse -}}
 
-<section class="relative overflow-hidden border-b border-line-strong">
-    {{- /* Decorative coordinate grid, faded at the edges. Never interactive. */}}
-    <div class="sv-grid sv-grid-fade pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+{{ $extra := printf `<div class="mt-6 flex flex-wrap items-center gap-2"><span class="sv-label normal-case">read about</span>%s</div><div class="mt-8">%s</div>` (partial "hero-extra.html" .) (partial "hero-actions.html" .) }}
 
-    <div class="relative mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <p class="sv-label sv-prompt normal-case">cat /etc/stellarvector/blog</p>
-
-        <h1 class="sv-marker !mt-0 !mb-4"><span class="sv-glitch sv-glitch-auto" data-text="{{ site.Title }}">{{ site.Title }}</span></h1>
-
-        <p class="mt-4 max-w-2xl text-base text-muted text-pretty sm:text-lg">
-            Official walkthroughs and strategies from our latest Capture The Flag
-            competitions.<span class="sv-caret" aria-hidden="true"></span>
-        </p>
-
-        <div class="mt-6 flex flex-wrap items-center gap-2">
-            <span class="sv-label normal-case">read about</span>
-            {{ range first 5 site.Taxonomies.category.ByCount }}
-                {{ partial "category-pill.html" (dict "name" .Page.Title) }}
-            {{ end }}
-        </div>
-
-        <div class="mt-8">
-            {{ partial "sv/button" (dict "text" "browse all writeups" "url" (relURL "/writeups/") "variant" "solid" "data" (dict "umami-event" "click: hero-all-writeups")) }}
-        </div>
-    </div>
-</section>
+{{ partial "sv/hero" (dict 
+    "prompt" "cat /etc/stellarvector/blog" 
+    "title" site.Title 
+    "subtitle" "Official walkthroughs and strategies from our latest Capture The Flag competitions."
+    "measure" "6xl"
+    "extra" ($extra | safeHTML)
+) }}
 
 <div class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
     {{ with $featured }}

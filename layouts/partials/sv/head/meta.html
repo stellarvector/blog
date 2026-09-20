@@ -1,0 +1,49 @@
+{{- /* 
+    sv/head/meta.html -- blog override to add "writeup" suffix to page titles.
+*/ -}}
+
+{{- $title := site.Title -}}
+{{- if and (not .IsHome) .Title -}}
+    {{- $suffix := cond (eq .Section "writeups") " writeup" "" -}}
+    {{- $title = printf "%s%s | %s" .Title $suffix site.Title -}}
+{{- end -}}
+
+{{- $desc := .Description -}}
+{{- if not $desc -}}
+    {{- if .IsPage -}}
+        {{- $desc = .Summary | plainify | truncate 300 -}}
+    {{- else -}}
+        {{- $desc = site.Params.description -}}
+    {{- end -}}
+{{- end -}}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="{{ site.Params.theme_color_dark }}">
+
+<title>{{ $title }}</title>
+{{ with $desc }}<meta name="description" content="{{ . }}">{{ end }}
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- /* Favicon: theme-hosted, per-site from Phase 11. */ -}}
+<link rel="icon" type="image/png" href="{{ "/assets/logo/favicon.ico" | relURL }}">
+
+{{- with site.Home.OutputFormats.Get "rss" }}
+    <link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{- end }}
+
+{{- /* OpenGraph */ -}}
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title }}">
+{{ with $desc }}<meta property="og:description" content="{{ . }}">{{ end }}
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+
+{{- /* Per-site OG image from Phase 11. */ -}}
+<meta property="og:image" content="{{ site.Params.logo.dark | absURL }}">
+
+<meta name="twitter:card" content="summary">
+
+{{- /* Structured data */ -}}
+{{ template "_internal/schema.html" . }}

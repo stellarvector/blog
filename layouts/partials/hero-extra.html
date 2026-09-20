@@ -1,0 +1,6 @@
+<div class="flex flex-wrap items-center gap-2">
+    <span class="sv-label normal-case">read about</span>
+    {{ range first 5 site.Taxonomies.category.ByCount }}
+        {{ partial "category-pill.html" (dict "name" .Page.Title) }}
+    {{ end }}
+</div>

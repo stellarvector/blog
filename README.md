@@ -1,7 +1,8 @@
 # Stellar Vector Blog
 
-This is the stellar vector blog sourcecode.
-Feel free to contribute by writing a post and submitting a PR.
+Official walkthroughs and strategies from our latest Capture The Flag competitions.
+
+Chrome, tokens and shared components come from `github.com/stellarvector/theme`; read its README before adding a component here.
 
 ## Adding a writeup
 
@@ -42,3 +43,12 @@ installed as well. Run `hugo mod get -u github.com/stellarvector/theme` to updat
 ## Building
 
 Run `hugo` to generate the static site in the `public/` directory.
+
+## Ownership
+
+| Concern | Source of truth |
+|---|---|
+| Writeups and authors data | This repository |
+| Search logic and lightbox | This repository |
+| TOC behavior and reading progress | This repository |
+| Chrome, tokens, and base behavior | Shared Hugo module |
